@@ -17,6 +17,7 @@ import NucleoIcons from "views/IndexSections/NucleoIcons.jsx";
 import Signup from "views/IndexSections/Signup.jsx";
 import Examples from "views/IndexSections/Examples.jsx";
 import Download from "views/IndexSections/Download.jsx";
+import PrimaryNavBar from "components/Navbars/PrimaryNavBar.jsx";
 
 class Index extends React.Component {
   componentDidMount() {
@@ -28,9 +29,9 @@ class Index extends React.Component {
   render() {
     return (
       <>
-        <IndexNavbar />
+        <PrimaryNavBar/>
         <div className="wrapper">
-          <PageHeader />
+          
           <div className="main">
             <Basics />
             <Navbars />

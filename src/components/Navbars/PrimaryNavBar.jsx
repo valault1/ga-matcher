@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 // reactstrap components
 import {
   Collapse,
@@ -28,7 +29,7 @@ class Navbars extends React.Component {
           <Container>
             <div className="navbar-translate">
               <NavbarBrand href="#pablo" onClick={e => e.preventDefault()}>
-                Info Color
+                University of Memphis CS Dept - GA Matcher
               </NavbarBrand>
               <button className="navbar-toggler" aria-expanded={false}>
                 <span className="navbar-toggler-bar bar1" />
@@ -40,17 +41,12 @@ class Navbars extends React.Component {
               <Nav className="ml-auto" navbar>
                 <NavItem className="active">
                   <NavLink href="#pablo" onClick={e => e.preventDefault()}>
-                    Discover
+                    <Link to="/upload-page" style={{ color:"white" }}>Upload Excel Sheet</Link>
                   </NavLink>
                 </NavItem>
                 <NavItem>
                   <NavLink href="#pablo" onClick={e => e.preventDefault()}>
-                    Profile
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="#pablo" onClick={e => e.preventDefault()}>
-                    Settings
+                    Download Current Setup
                   </NavLink>
                 </NavItem>
               </Nav>

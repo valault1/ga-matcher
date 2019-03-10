@@ -1,0 +1,23 @@
+From API:
+- Schedule
+- Undergraduate transcript (if they went here!)
+- Graduate transcript
+- Class Hours
+
+From Department entry:
+- GA Past Assignment
+- English level
+- GA Nomination
+- 
+
+
+
+RULES
+- A Class cannot have more than 2 GA's
+- A GA Cannot have more than 2 assignments
+- A class is worth 5 credit hours per 10 students
+	- Rounded - 17-19 can count for 10
+- A GA can assist a class if they have taught it in the past
+- A GA can assist a class if it is undergraduate
+- A GA shouldn't assist a class if they have bad English, and the professor requests english
+- A GA shouldn't assist a class if they have a schedule conflict, and the professor wants attendance

@@ -10,11 +10,11 @@ import Index from "views/Index.jsx";
 import LandingPage from "views/examples/LandingPage.jsx";
 import RegisterPage from "views/examples/RegisterPage.jsx";
 import ProfilePage from "views/examples/ProfilePage.jsx";
-
+import UploadFilePage from "views/examples/UploadFilePage.jsx";
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route path="/components" render={props => <Index {...props} />} />
+      <Route path="/home" render={props => <Index {...props} />} />
       <Route
         path="/landing-page"
         render={props => <LandingPage {...props} />}
@@ -27,7 +27,11 @@ ReactDOM.render(
         path="/profile-page"
         render={props => <ProfilePage {...props} />}
       />
-      <Redirect from="/" to="/components" />
+      <Route
+        path="/upload-page"
+        render={props => <UploadFilePage {...props} />}
+      />
+      <Redirect from="/" to="/upload-page" />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")

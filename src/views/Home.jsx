@@ -35,9 +35,14 @@ import {
   Col
 } from "reactstrap";
 
-class Index extends React.Component {
+class Home extends React.Component {
+    constructor(props) {
+      super(props);
+    }
   componentDidMount() {
     document.body.classList.toggle("index-page");
+    console.log(this.props.names);
+    console.log(this.props.courses);
   }
   componentWillUnmount() {
     document.body.classList.toggle("index-page");
@@ -47,19 +52,19 @@ class Index extends React.Component {
       <>
         <PrimaryNavBar/>
         <div className="wrapper">
-          
+
           <div className="main">
             <Container>
             <Row>
             <Col md="2">
-              <Names />
+              <Names names={this.props.names} />
             </Col>
             <Col>
               <Courses />
             </Col>
             </Row>
             </Container>
-            
+
           </div>
         </div>
       </>
@@ -67,4 +72,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default Home;

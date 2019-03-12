@@ -40,7 +40,8 @@ class Names extends React.Component {
   }
 
   componentDidMount() {
-    
+    console.log(this.props);
+
   }
   render() {
     var names;
@@ -51,8 +52,8 @@ class Names extends React.Component {
     else {
       this.names=['Val','Hudson'];
     }
-    
-    const listItems = names.map((name) => <li>{name}</li>);
+
+    const listItems = this.props.names.map((name) => <li>{name}</li>);
 
     return (
       <div className="section section-names" id="basic-elements">

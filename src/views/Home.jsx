@@ -41,8 +41,8 @@ class Home extends React.Component {
     }
   componentDidMount() {
     document.body.classList.toggle("index-page");
-    console.log(this.props.names);
-    console.log(this.props.courses);
+    console.log(this.props.nameSheet);
+    console.log(this.props.courseSheet);
   }
   componentWillUnmount() {
     document.body.classList.toggle("index-page");
@@ -56,11 +56,11 @@ class Home extends React.Component {
           <div className="main">
             <Container>
             <Row>
-            <Col md="2">
-              <Names names={this.props.names} />
+            <Col md="3">
+              <Names nameSheet={this.props.nameSheet} />
             </Col>
             <Col>
-              <Courses />
+              <Courses courseSheet={this.props.courseSheet} />
             </Col>
             </Row>
             </Container>

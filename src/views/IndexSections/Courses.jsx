@@ -44,13 +44,27 @@ class Courses extends React.Component {
   componentDidMount() {
     
   }
+
+  
+
   render() {
+    const sheetMap = this.props.courseSheet.map((row) =>
+      <Row>
+        <Col><label>{row[1]}</label></Col>
+        <Col><label>{row[4]}</label></Col>
+        <Col><label>TA 1 </label><label><font color="green">Hours</font></label></Col>
+        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>  
+        <Col><label>TA 3 </label><t/><label><font color="green">Hours</font></label></Col>
+      </Row>
+    );
     return (
+      
+
       <div className="section section-courses" id="basic-elements">
         COURSES
         <Card>
           <CardBody>
-            This is the list of Courses<br/>
+            {sheetMap}
           </CardBody>
         </Card>
         

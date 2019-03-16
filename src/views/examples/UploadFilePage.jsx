@@ -37,25 +37,26 @@ var sheet1, sheet2;
 
 
 class UploadFilePage extends React.Component {
-
+  
   constructor(props) {
     super(props);
+    this.state = {
+      
+    }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clickFileInput = this.clickFileInput.bind(this);
     this.fileInput = React.createRef();
-
-
+    
+    
   }
   handleSubmit(event) {
     event.preventDefault();
     var f = this.fileInput.current.files[0]
     var name = f.name;
     const reader = new FileReader();
-
-    var that = this;
     /*evt = on_file_select event */
-    reader.onload = (evt) => {
-      var courses=[], names=[];
+    var that=this;
+    reader.onload = (evt) => { 
         /* Parse data */
         const bstr = evt.target.result;
         const wb = XLSX.read(bstr, {type:'binary'});
@@ -68,7 +69,9 @@ class UploadFilePage extends React.Component {
         /* Convert array of arrays */
         sheet1 = XLSX.utils.sheet_to_json(ws1, {header:1});
         sheet2 = XLSX.utils.sheet_to_json(ws2, {header:1});
-
+        console.log(sheet1);
+        console.log(sheet2);
+        var courses=[], names=[];
         for(var i=1; i < sheet1.length; i++) {
           courses.push(sheet1[i][2]);
         }
@@ -76,14 +79,11 @@ class UploadFilePage extends React.Component {
           names.push(sheet2[i][1]);
         }
         /* Update state */
-
-        console.log("courses: " + courses);
-        console.log("names: " + names);
-        that.props.addNamesCourses(names, courses);
+        //console.log("courses: " + courses);
+        //console.log("names: " + names);
+        that.props.addNamesCourses(sheet2, sheet1);
         document.getElementById('home-link').click();
     };
-
-    
     reader.readAsBinaryString(f);
     console.log("File processed");
   }
@@ -94,32 +94,27 @@ class UploadFilePage extends React.Component {
 
   }
 
-
+  
   render() {
     return (
       <>
 
       <h1>This is the upload page.</h1><br/>
-
+      
       <button class="btn btn-info btn-round" type="button" id="attach" onClick={this.clickFileInput}>
         <i class="tim-icons icon-attach-87"></i> Attach File
       </button>
       <Link to="/home" id='home-link'/>
         <button class="btn btn-info btn-round" type="button" id="send" onClick={this.handleSubmit}>
-          <i class="tim-icons icon-check-2"></i>
+          <i class="tim-icons icon-check-2"></i> 
           Start editing
-
+          
         </button>
-
-
-      <form onSubmit={this.handleSubmit}>
+      
+      
         <label>
-          Upload file:
-          <input type="file" id="file-input-button" ref={this.fileInput} />
+          <input type="file" id="file-input-button" ref={this.fileInput} hidden="true" />
         </label>
-        <br />
-        <button type="submit"></button>
-      </form>
       </>
     );
   }

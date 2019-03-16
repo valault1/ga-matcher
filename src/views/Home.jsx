@@ -32,22 +32,50 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
+  Col,
+  Card,
+  CardBody
 } from "reactstrap";
 
 class Home extends React.Component {
     constructor(props) {
       super(props);
+      //Pass the props stuff to state, so it can be changed here instead of in the index
+      this.state={courseSheet: this.props.courseSheet,
+                  nameSheet: this.props.nameSheet};
     }
   componentDidMount() {
+
+
     document.body.classList.toggle("index-page");
     console.log(this.props.nameSheet);
     console.log(this.props.courseSheet);
   }
+  changeCourses() {
+    this.props.courses[1] = {name:"COMP4700"};
+  }
   componentWillUnmount() {
     document.body.classList.toggle("index-page");
   }
+
+  
   render() {
+    const courseMap = this.props.courseSheet.map((row) =>
+      <Row>
+        <Col><label>{row[1]}</label></Col>
+        <Col><label>{row[4]}</label></Col>
+        <Col><label>TA 1 </label><label><font color="green">Hours</font></label></Col>
+        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>  
+        <Col><label>TA 3 </label><t/><label><font color="green">Hours</font></label></Col>
+      </Row>
+    );
+
+    const gaMap = this.props.nameSheet.map((row) =>
+      <Row>
+        <Col><label>{row[1]}</label></Col>
+        <Col><label>{row[6]}</label></Col>
+      </Row>
+    );
     return (
       <>
         <PrimaryNavBar/>
@@ -57,10 +85,25 @@ class Home extends React.Component {
             <Container>
             <Row>
             <Col md="3">
-              <Names nameSheet={this.props.nameSheet} />
+              <div className="section section-names" id="basic-elements">
+                Potential GA's<br/>
+                <Card>
+                  <CardBody>
+                    {gaMap}
+                  </CardBody>
+                </Card>
+              </div>
             </Col>
             <Col>
-              <Courses courseSheet={this.props.courseSheet} />
+            <div className="section section-courses" id="basic-elements">
+              COURSES
+              <Card>
+                <CardBody>
+                  {courseMap}
+                </CardBody>
+              </Card>
+              
+            </div>
             </Col>
             </Row>
             </Container>

@@ -73,9 +73,24 @@ class Home extends React.Component {
     this.setState({'nameStyler': {'color':'pink'}});
   }
 
-  handleDropdownClick(id, e) {
+  handleDropdownClick(dropdownId, dropWrapId, dropMenuId, e) {
     console.log("HandlingClick");
-    console.log(id);
+    console.log(dropdownId);
+
+    const dropDown = document.getElementById(dropdownId);
+    const dropDownMenu = document.getElementById(dropMenuId);
+    const dropDownWrap = document.getElementById(dropWrapId);
+
+    if (dropDown.getAttribute("aria-expanded") === "false") {
+      dropDown.setAttribute("aria-expanded", "true");
+      dropDownMenu.setAttribute("class", "dropdown-menu show");
+      dropDownWrap.setAttribute("class", "dropdown show");
+    }
+    else {
+      dropDown.setAttribute("aria-expanded", "false");
+      dropDownMenu.setAttribute("class", "dropdown-menu");
+      dropDownWrap.setAttribute("class", "dropdown");
+    }
   }
 
 
@@ -85,21 +100,24 @@ class Home extends React.Component {
     const dropdown = (dropid, dropdownName) => {
 
       let dropdownId = dropdownName + "dropDown" + dropid;
+      let dropWrapId = dropdownName + "dropDownWrap" + dropid;
+      let dropMenuId = dropdownName + "dropDownMenu" + dropid;
 
       return (
-      <div class="dropdown">
+      <div class="dropdown"
+            id={dropWrapId}>
             <button
             class="btn btn-secondary dropdown-toggle"
             type="button"
-            id={dropid}
+            id={dropdownId}
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
-            onClick={this.handleDropdownClick.bind(this, dropdownId)}>
+            onClick={this.handleDropdownClick.bind(this, dropdownId, dropWrapId, dropMenuId)}>
               {dropdownName}
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#">Action</a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id={dropMenuId}>
+              <a class="dropdown-item" href="#">{this.props.nameSheet[1]}</a>
               <a class="dropdown-item" href="#">Another action</a>
               <a class="dropdown-item" href="#">Something else here</a>
             </div>
@@ -115,7 +133,7 @@ class Home extends React.Component {
       <Row>
         <Col><label onClick={this.handleclick}>{row[1]}</label></Col>
         <Col><label>{row[4]}</label></Col>
-        <Col>{dropdown(id, "Ta's")}<label><font color="green">Hours</font></label></Col>
+        <Col>{dropdown(id, "TA's")}<label><font color="green">Hours</font></label></Col>
         <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>
         <Col><label>TA 3 </label><t/><label><font color="green">Hours</font></label></Col>
       </Row>

@@ -37,12 +37,22 @@ import {
   CardBody
 } from "reactstrap";
 
+
+let nameStyles = {
+  color: 'white'
+}
+
 class Home extends React.Component {
     constructor(props) {
       super(props);
+      this.handleclick = this.handleclick.bind(this);
+      this.handleDropdownClick = this.handleDropdownClick.bind(this);
       //Pass the props stuff to state, so it can be changed here instead of in the index
-      this.state={courseSheet: this.props.courseSheet,
-                  nameSheet: this.props.nameSheet};
+      this.state={
+        courseSheet: this.props.courseSheet,
+        nameSheet: this.props.nameSheet,
+        nameStyler: {color: 'white'}
+                  };
     }
   componentDidMount() {
 
@@ -58,21 +68,66 @@ class Home extends React.Component {
     document.body.classList.toggle("index-page");
   }
 
-  
+  handleclick() {
+    console.log("I am the clickable label");
+    this.setState({'nameStyler': {'color':'pink'}});
+  }
+
+  handleDropdownClick(id, e) {
+    console.log("HandlingClick");
+    console.log(id);
+  }
+
+
+
   render() {
-    const courseMap = this.props.courseSheet.map((row) =>
+
+    const dropdown = (dropid, dropdownName) => {
+
+      let dropdownId = dropdownName + "dropDown" + dropid;
+
+      return (
+      <div class="dropdown">
+            <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id={dropid}
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onClick={this.handleDropdownClick.bind(this, dropdownId)}>
+              {dropdownName}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+        </div>
+      );
+    }
+
+    let id = 0
+    const courseMap = this.props.courseSheet.map((row, id) => {
+
+      ++id;
+      return(
       <Row>
-        <Col><label>{row[1]}</label></Col>
+        <Col><label onClick={this.handleclick}>{row[1]}</label></Col>
         <Col><label>{row[4]}</label></Col>
-        <Col><label>TA 1 </label><label><font color="green">Hours</font></label></Col>
-        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>  
+        <Col>{dropdown(id, "Ta's")}<label><font color="green">Hours</font></label></Col>
+        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>
         <Col><label>TA 3 </label><t/><label><font color="green">Hours</font></label></Col>
       </Row>
     );
 
+    });
+
+
+
     const gaMap = this.props.nameSheet.map((row) =>
       <Row>
-        <Col><label>{row[1]}</label></Col>
+        <Col><label style={this.state.nameStyler}>{row[1]}</label></Col>
         <Col><label>{row[6]}</label></Col>
       </Row>
     );
@@ -102,13 +157,14 @@ class Home extends React.Component {
                   {courseMap}
                 </CardBody>
               </Card>
-              
+
             </div>
             </Col>
             </Row>
             </Container>
 
           </div>
+
         </div>
       </>
     );

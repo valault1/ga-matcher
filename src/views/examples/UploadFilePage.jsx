@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { Link } from "react-router-dom";
 
 
+
 import classnames from "classnames";
 // reactstrap components
 import {
@@ -37,14 +38,14 @@ var sheet1, sheet2;
 
 
 class UploadFilePage extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clickFileInput = this.clickFileInput.bind(this);
     this.fileInput = React.createRef();
-    
-    
+
+
   }
   handleSubmit(event) {
     event.preventDefault();
@@ -52,7 +53,7 @@ class UploadFilePage extends React.Component {
     var name = f.name;
     const reader = new FileReader();
     /*evt = on_file_select event */
-    reader.onload = (evt) => { 
+    reader.onload = (evt) => {
         /* Parse data */
         const bstr = evt.target.result;
         const wb = XLSX.read(bstr, {type:'binary'});
@@ -87,24 +88,37 @@ class UploadFilePage extends React.Component {
 
   }
 
-  
+
   render() {
     return (
       <>
 
-      <h1>This is the upload page.</h1><br/>
-      
-      <button class="btn btn-info btn-round" type="button" id="attach" onClick={this.clickFileInput}>
-        <i class="tim-icons icon-attach-87"></i> Attach File
-      </button>
-      <Link to="/home" id='home-link'/>
-        <button class="btn btn-info btn-round" type="button" id="send" onClick={this.handleSubmit}>
-          <i class="tim-icons icon-check-2"></i> 
-          Start editing
-          
-        </button>
-      
-      
+      <ExamplesNavbar />
+
+      <div className="wrapper">
+        <div className="page-header">
+
+        <Container className="align-items-center">
+          <Row>
+          <div className="align-items-center">
+          <button class="btn btn-info btn-round" type="button" id="attach" onClick={this.clickFileInput}>
+            <i class="tim-icons icon-attach-87"></i> Attach File
+          </button>
+          <Link to="/home" id='home-link'/>
+            <button class="btn btn-info btn-round" type="button" id="send" onClick={this.handleSubmit}>
+              <i class="tim-icons icon-check-2"></i>
+              Start editing
+
+            </button>
+          </div>
+
+          </Row>
+        </Container>
+      {/*<h1>This is the upload page.</h1><br/>*/}
+
+
+
+
       <form onSubmit={this.handleSubmit}>
         <label>
           Upload file:
@@ -113,6 +127,8 @@ class UploadFilePage extends React.Component {
         <br />
         <button type="submit"></button>
       </form>
+      </div>
+      </div>
       </>
     );
   }

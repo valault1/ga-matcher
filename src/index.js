@@ -11,6 +11,7 @@ import LandingPage from "views/examples/LandingPage.jsx";
 import RegisterPage from "views/examples/RegisterPage.jsx";
 import ProfilePage from "views/examples/ProfilePage.jsx";
 import UploadFilePage from "views/examples/UploadFilePage.jsx";
+import UploadFilePageHudson from "views/examples/UploadFilePage-Hudson.jsx";
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
@@ -29,7 +30,7 @@ ReactDOM.render(
       />
       <Route
         path="/upload-page"
-        render={props => <UploadFilePage {...props} />}
+        render={props => <UploadFilePageHudson {...props} />}
       />
       <Redirect from="/" to="/upload-page" />
     </Switch>

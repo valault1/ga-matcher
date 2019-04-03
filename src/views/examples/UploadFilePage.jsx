@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { Link } from "react-router-dom";
 
 
+
 import classnames from "classnames";
 
 // reactstrap components
@@ -40,17 +41,17 @@ var sheet1, sheet2;
 
 
 class UploadFilePage extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
-      
+
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clickFileInput = this.clickFileInput.bind(this);
     this.fileInput = React.createRef();
-    
-    
+
+
   }
   handleSubmit(event) {
     event.preventDefault();
@@ -59,7 +60,7 @@ class UploadFilePage extends React.Component {
     const reader = new FileReader();
     /*evt = on_file_select event */
     var that=this;
-    reader.onload = (evt) => { 
+    reader.onload = (evt) => {
         /* Parse data */
         const bstr = evt.target.result;
         const wb = XLSX.read(bstr, {type:'binary'});
@@ -189,27 +190,51 @@ class UploadFilePage extends React.Component {
 
   }
 
-  
+
   render() {
     return (
       <>
 
-      <h1>This is the upload page.</h1><br/>
-      
-      <button class="btn btn-info btn-round" type="button" id="attach" onClick={this.clickFileInput}>
-        <i class="tim-icons icon-attach-87"></i> Attach File
-      </button>
-      <Link to="/home" id='home-link'/>
-        <button class="btn btn-info btn-round" type="button" id="send" onClick={this.handleSubmit}>
-          <i class="tim-icons icon-check-2"></i> 
-          Start editing
-          
-        </button>
-      
-      
+      <ExamplesNavbar />
+
+      <div className="wrapper">
+        <div className="page-header">
+
+        <Container className="align-items-center" style={{paddingTop: "20vh"}}>
+          <Row>
+            <Col className="col-sm align-items-center">
+                <div className="align-items-center">
+                <button class="btn btn-primary btn-round" type="button" id="attach" onClick={this.clickFileInput}>
+                  <i class="tim-icons icon-attach-87"></i> Attach File
+                </button>
+
+
+
+                <Link to="/home" id='home-link'/>
+                  <button class="btn btn-primary btn-round" type="button" id="send" onClick={this.handleSubmit}>
+                    <i class="tim-icons icon-check-2"></i>
+                    Start editing
+
+                  </button>
+                </div>
+
+            </Col>
+
+          </Row>
+        </Container>
+      {/*<h1>This is the upload page.</h1><br/>*/}
+
+
+
+
+
         <label>
           <input type="file" id="file-input-button" ref={this.fileInput} hidden="true" />
         </label>
+        <br />
+
+      </div>
+      </div>
       </>
     );
   }

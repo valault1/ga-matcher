@@ -37,19 +37,30 @@ import {
   CardBody
 } from "reactstrap";
 
+
+let nameStyles = {
+  color: 'white'
+}
+
 class Home extends React.Component {
     constructor(props) {
       super(props);
+      this.handleclick = this.handleclick.bind(this);
+      this.handleDropdownClick = this.handleDropdownClick.bind(this);
+      this.handleSelectClick = this.handleSelectClick.bind(this);
       //Pass the props stuff to state, so it can be changed here instead of in the index
-      this.state={courseSheet: this.props.courseSheet,
-                  nameSheet: this.props.nameSheet};
+      this.state={
+        courseSheet: this.props.courseSheet,
+        nameSheet: this.props.nameSheet,
+        nameStyler: {color: 'white'}
+                  };
     }
   componentDidMount() {
 
-
-    document.body.classList.toggle("index-page");
-    console.log(this.props.nameSheet);
-    console.log(this.props.courseSheet);
+    console.log(this.props);
+    // document.body.classList.toggle("index-page");
+    // console.log(this.props.nameSheet);
+    // console.log(this.props.courseSheet);
   }
   changeCourses() {
     this.props.courses[1] = {name:"COMP4700"};
@@ -58,21 +69,110 @@ class Home extends React.Component {
     document.body.classList.toggle("index-page");
   }
 
-  
+  handleclick() {
+    console.log("I am the clickable label");
+    this.setState({'nameStyler': {'color':'pink'}});
+  }
+
+  handleDropdownClick(dropdownId, dropWrapId, dropMenuId, e) {
+    console.log("HandlingClick");
+    console.log(dropdownId);
+
+    const dropDown = document.getElementById(dropdownId);
+    const dropDownMenu = document.getElementById(dropMenuId);
+    const dropDownWrap = document.getElementById(dropWrapId);
+
+    if (dropDown.getAttribute("aria-expanded") === "false") {
+      dropDown.setAttribute("aria-expanded", "true");
+      dropDownMenu.setAttribute("class", "dropdown-menu show");
+      dropDownWrap.setAttribute("class", "dropdown show");
+    }
+    else {
+      dropDown.setAttribute("aria-expanded", "false");
+      dropDownMenu.setAttribute("class", "dropdown-menu");
+      dropDownWrap.setAttribute("class", "dropdown");
+    }
+  }
+
+  handleSelectClick(lastName, event) {
+    console.log(lastName);
+
+  }
+
+  courseClick(courseKey, event) {
+    console.log(courseKey);
+    this.props.nameSheet.map((row) => {
+
+        if (row[1] === 'Shima') {
+          const ta = document.getElementById(row[2]);
+          ta.classList.remove("text-white");
+          ta.classList.add("text-success");
+        }
+
+        return null;
+    });
+  }
+
+
+
   render() {
-    const courseMap = this.props.courseSheet.map((row) =>
+
+    console.log(this.props);
+
+
+    
+    const dropDownMenu = this.props.courseSheet.map((row) =>
+      <a class="dropdown-item" href="#" onClick={this.handleSelectClick.bind(this, row[1])}>{row[1]}</a>
+    );
+
+    const dropdown = (dropid, dropdownName) => {
+
+
+      let dropdownId = dropdownName + "dropDown" + dropid;
+      let dropWrapId = dropdownName + "dropDownWrap" + dropid;
+      let dropMenuId = dropdownName + "dropDownMenu" + dropid;
+
+      return (
+      <div class="dropdown"
+            id={dropWrapId}>
+            <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id={dropdownId}
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onClick={this.handleDropdownClick.bind(this, dropdownId, dropWrapId, dropMenuId)}>
+              {dropdownName}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id={dropMenuId}>
+              {dropDownMenu}
+            </div>
+        </div>
+      );
+    }
+
+    let id = 0
+    const courseMap = this.props.courseSheet.map((row, id) => {
+
+      ++id;
+      return(
       <Row>
-        <Col><label>{row[1]}</label></Col>
+        <Col><button class="btn btn-primary btn-round" type="button" id={row[2]} onClick={this.courseClick.bind(this, row[2])}>{row[1]}</button></Col>
         <Col><label>{row[4]}</label></Col>
-        <Col><label>TA 1 </label><label><font color="green">Hours</font></label></Col>
-        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>  
+        <Col>{dropdown(id, "TA's")}<label><font color="green">Hours</font></label></Col>
+        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>
         <Col><label>TA 3 </label><t/><label><font color="green">Hours</font></label></Col>
       </Row>
     );
 
+    });
+
+
+
     const gaMap = this.props.nameSheet.map((row) =>
       <Row>
-        <Col><label>{row[1]}</label></Col>
+        <Col><Label className="text-white" id={row[2]}>{row[1]}</Label></Col>
         <Col><label>{row[6]}</label></Col>
       </Row>
     );
@@ -102,13 +202,14 @@ class Home extends React.Component {
                   {courseMap}
                 </CardBody>
               </Card>
-              
+
             </div>
             </Col>
             </Row>
             </Container>
 
           </div>
+
         </div>
       </>
     );

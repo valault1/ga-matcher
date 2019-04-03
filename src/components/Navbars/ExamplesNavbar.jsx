@@ -76,8 +76,8 @@ class PagesNavbar extends React.Component {
               title="Designed and Coded by Creative Tim"
               tag={Link}
             >
-              <span>BLK• </span>
-              Design System React
+              <span>Graduate Assistant • </span>
+              Matcher
             </NavbarBrand>
             <button
               aria-expanded={this.state.collapseOpen}

@@ -24,24 +24,65 @@ class Index extends Component {
   constructor(props) {
     super(props);
     this.addNamesCourses = this.addNamesCourses.bind(this);
+    this.addAvailableTa = this.addAvailableTa.bind(this);
+    this.deleteAvailableTa = this.deleteAvailableTa.bind(this);
     this.state = {
-      nameSheet: [],
-      courseSheet: []
+      nameSheet:[],
+      courseSheet:[],
+      coursesTa:[],
+      availableTAs:[]
     }
 
+  };
+
+
+  addAvailableTa(courseTa) {
+    console.log(courseTa);
+  }
+
+  deleteAvailableTa(courseTa) {
+    console.log(courseTa);
   }
 
 
   addNamesCourses(newNameSheet, newCourseSheet) {
+
+    let dropDown = []
+
+    newCourseSheet.forEach((element) => {
+      console.log(element);
+
+      if(element[2] === "Key") {
+        return;
+      }
+      if(element[2] === undefined) {
+        const key = element[1];
+        dropDown.push({ [key] : "TA's" });
+      }
+      else {
+        const key = element[2];
+        dropDown.push({ [key] :"TA's" });
+      }
+
+
+
+    });
+    console.log(dropDown);
+
+
     this.setState({nameSheet: newNameSheet,
-                  courseSheet: newCourseSheet})
+                  courseSheet: newCourseSheet,
+                  availableTAs: newNameSheet,
+                  coursesTa: dropDown});
   }
 
   render() {
+    console.log(this.state);
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/home" render={props => <Home {...props} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} />} />
+          <Route path="/home"
+          render={props => <Home {...props} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} />} />
           <Route
             path="/upload-page"
             render={(props) => <UploadFilePage {...props} addNamesCourses={this.addNamesCourses} />}
@@ -60,7 +101,7 @@ class Index extends Component {
           />
           <Redirect from="/" to="/upload-page" />
         </Switch>
-        
+
 
 
 

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 
 import classnames from "classnames";
+
 // reactstrap components
 import {
   Button,
@@ -31,8 +32,9 @@ import {
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import { watchFile } from "fs";
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 
-
+var Papa = require('papaparse');
 var sheet1, sheet2;
 
 
@@ -70,8 +72,100 @@ class UploadFilePage extends React.Component {
         /* Convert array of arrays */
         sheet1 = XLSX.utils.sheet_to_json(ws1, {header:1});
         sheet2 = XLSX.utils.sheet_to_json(ws2, {header:1});
-        console.log(sheet1);
-        console.log(sheet2);
+        
+        
+        //In sheets, I'll store the values of the column names mapped to their index on each sheet
+        var sheets = {};
+        for (var i=0; i < wb.SheetNames.length; i++) {
+          //sheetName is the name of this sheet
+          var sheetName= wb.SheetNames[i];
+          //sheet is the content of this sheet
+          var sheet = wb.Sheets[sheetName];
+          //header is the row with the names of the values; ex. "Schedule"
+          var header = sheet[0];
+          
+
+          var csv = XLSX.utils.sheet_to_csv(sheet);
+          var parsed = Papa.parse(csv, {
+            header: true
+          })
+          console.log(parsed);
+          sheets[sheetName] = parsed.data;
+          
+          
+        }
+        /*
+          Method for checking if a student has time or not:
+          - go through each of the days, and each of the times on each of those days
+          - Read the class range, and make sure the beginning of the class is greater than the end number or lower than the beginning number
+          - Then check that the end of the class is less less than the begin number or greater than the end number
+          
+        */
+        /*
+        SHEETS
+        {
+          
+            GA's: 
+              [
+                { 
+                  name: Val
+                  lname: Ault
+                  English: true
+                  Schedule:
+                },
+                {
+                  name: Hudson
+                  lname: Gribble
+                  English: false
+                  Schedule: 
+                }
+              ]
+          
+            
+            Courses:
+              [
+                {
+                  course number: 4401
+                  CRN: 663012
+                  Teacher: Sen,
+                  Schedule: {
+                    M: ["1220-1325"]
+                    W: ["1220-1325"]
+                  }
+                },
+                {
+                  course number: 6040
+                  CRN: 663012
+                  Teacher: Fatih
+                }
+              ],
+
+              RegistrationHistory: {
+                U00511339: {
+                  currentSchedule: {
+                    M: "1420-1545"
+                    T: ["1120-1245", "1300-1425", "1440-1605"]
+                    W: [1420-1545]
+                    R: [1120-1245, 1300-1425, 1440-1605]
+                    F:
+                    S:
+
+
+                  }
+                  pastClasses: {
+                    COMP3410: 'A'
+
+                  }
+                }
+              }
+            
+          
+        }
+
+
+        */
+        console.log(sheets);
+        
         var courses=[], names=[];
         for(var i=1; i < sheet1.length; i++) {
           courses.push(sheet1[i][2]);

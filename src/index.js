@@ -30,20 +30,84 @@ class Index extends Component {
       nameSheet:[],
       courseSheet:[],
       coursesTa:[],
-      availableTAs:[]
+      availableTAs:[],
+
+      courses: [{
+        courseName: "Comp-1900",
+        crn: 5432,
+        TAHOURSNeeded: 25,
+        TAHOURSUsed: 0,
+        TA_Attendance: true,
+        CourseTA: ["TA's", "TA's", "TA's"],
+        TaUofMID: ["TaID", "TaID", "TaID"],
+        CourseStartTime: "1400",
+        CourseEndTime: "1600",
+        English_Preffered: true
+      }],
+      tas: [{
+        firstName: "Hudson",
+        lastName: "Gribble",
+        coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+        CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+        HoursAvailable: 15,
+        HourseUsed: 0,
+        UofMID: "U045345",
+        available: true,
+        english: true
+      }]
     }
 
   };
 
 
-  addAvailableTa(courseTa) {
+  addAvailableTa(courseTa, crn, taIndex, UofMID) {
+    console.log("I am in the addAvailableTa function");
     console.log(courseTa);
+    console.log(crn);
+    console.log(taIndex);
+    console.log(UofMID);
+
+
+    console.log(this.state.courses);
+
+    // let TaArray = this.state.courses[0].CourseTA;
+    // TaArray[0] = courseTa;
+    // console.log(TaArray);
+    let that = this;
+
+    // let courseObject = this.state.courses;
+    // console.log(courseObject);
+    // courseObject[0].CourseTA[0] = courseTa;
+    // console.log(courseObject[0].CourseTA[0]);
+    // this.setState({
+    //   courses: courseObject
+    // })
+    let index = 0;
+    this.state.courses.forEach(function(course) {
+
+      if (course.crn === crn)
+      {
+        //console.log(TaArray);
+        console.log("Hello");
+
+        let courseObjectTest = that.state.courses;
+        console.log(taIndex);
+        courseObjectTest[index].CourseTA[taIndex] = courseTa;
+        courseObjectTest[index].TaUofMID[taIndex] = UofMID;
+
+        that.setState({
+           courses: courseObjectTest,
+        });
+
+      }
+      index++;
+    });
+    console.log(this.state.courses[0].CourseTA[0]);
   }
 
   deleteAvailableTa(courseTa) {
     console.log(courseTa);
   }
-
 
   addNamesCourses(newNameSheet, newCourseSheet) {
 
@@ -82,7 +146,7 @@ class Index extends Component {
       <BrowserRouter>
         <Switch>
           <Route path="/home"
-          render={props => <Home {...props} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} />} />
+          render={props => <Home {...props} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} courses={this.state.courses} tas={this.state.tas} />} />
           <Route
             path="/upload-page"
             render={(props) => <UploadFilePage {...props} addNamesCourses={this.addNamesCourses} />}

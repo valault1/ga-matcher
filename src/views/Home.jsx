@@ -52,8 +52,11 @@ class Home extends React.Component {
       this.state={
         courseSheet: this.props.courseSheet,
         nameSheet: this.props.nameSheet,
-        nameStyler: {color: 'white'}
-                  };
+        nameStyler: {color: 'white'},
+        value: ""
+
+
+      };
     }
   componentDidMount() {
 
@@ -94,38 +97,57 @@ class Home extends React.Component {
     }
   }
 
-  handleSelectClick(lastName, event) {
+  handleSelectClick(lastName, crn, taIndex, UofMID, event) {
     console.log(lastName);
+    this.props.addAvailableTa(lastName, crn, taIndex, UofMID);
+
 
   }
 
   courseClick(courseKey, event) {
     console.log(courseKey);
-    this.props.nameSheet.map((row) => {
+    this.props.tas.map((ta) => {
 
-        if (row[1] === 'Shima') {
-          const ta = document.getElementById(row[2]);
-          ta.classList.remove("text-white");
-          ta.classList.add("text-success");
+        if (ta.lastName === 'Gribble') {
+          const gradAssistant = document.getElementById(ta.UofMID);
+          gradAssistant.classList.remove("text-white");
+          gradAssistant.classList.add("text-success");
         }
 
         return null;
     });
   }
 
+  handleInputChange(TaID, event) {
+    console.log(event.target.id);
+    console.log(TaID);
+    //let name = event.target.name;
 
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+    console.log(this.state.input3);
+  }
+
+  testFunction(event) {
+    console.log("Blur event working");
+  }
 
   render() {
 
     console.log(this.props);
 
 
-    
-    const dropDownMenu = this.props.courseSheet.map((row) =>
-      <a class="dropdown-item" href="#" onClick={this.handleSelectClick.bind(this, row[1])}>{row[1]}</a>
-    );
 
-    const dropdown = (dropid, dropdownName) => {
+    const dropDownMenu = (crn, taIndex) => {
+
+      return (this.props.tas.map((ta) =>
+        <a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.lastName, crn, taIndex, ta.UofMID)}>{ta.lastName}</a>
+      )
+    );
+    }
+
+    const dropdown = (dropid, dropdownName, crn, taIndex) => {
 
 
       let dropdownId = dropdownName + "dropDown" + dropid;
@@ -146,23 +168,35 @@ class Home extends React.Component {
               {dropdownName}
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id={dropMenuId}>
-              {dropDownMenu}
+              {dropDownMenu(crn, taIndex)}
             </div>
         </div>
       );
     }
 
-    let id = 0
-    const courseMap = this.props.courseSheet.map((row, id) => {
+    const makeInput = (id, TaID) => {
+      return (
+        <Input
+          id={id}
+          placeholder="TA's Hours"
+          onChange={this.handleInputChange.bind(this, TaID)}
+          onBlur={this.testFunction.bind(this)}
+          >
+          </Input>
+      );
+    }
 
-      ++id;
+    let id = 0
+    const courseMap = this.props.courses.map((row, id) => {
+
+      id += 3;
       return(
       <Row>
-        <Col><button class="btn btn-primary btn-round" type="button" id={row[2]} onClick={this.courseClick.bind(this, row[2])}>{row[1]}</button></Col>
-        <Col><label>{row[4]}</label></Col>
-        <Col>{dropdown(id, "TA's")}<label><font color="green">Hours</font></label></Col>
-        <Col><label>TA 2 </label><t/><label><font color="green">Hours</font></label></Col>
-        <Col><label>TA 3 </label><t/><label><font color="green">Hours</font></label></Col>
+        <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
+        <Col><label>{row.TAHOURSNeeded}</label></Col>
+        <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
+        <Col>{dropdown(id+1, row.CourseTA[1], row.crn, 1)}<label><font color="green">Hours</font></label></Col>
+        <Col>{dropdown(id+2, row.CourseTA[2], row.crn, 2)}<t/><label><font color="green">Hours</font></label></Col>
       </Row>
     );
 
@@ -170,10 +204,10 @@ class Home extends React.Component {
 
 
 
-    const gaMap = this.props.nameSheet.map((row) =>
+    const gaMap = this.props.tas.map((ta) =>
       <Row>
-        <Col><Label className="text-white" id={row[2]}>{row[1]}</Label></Col>
-        <Col><label>{row[6]}</label></Col>
+        <Col><Label className="text-white" id={ta.UofMID}>{ta.lastName}</Label></Col>
+        <Col><label>{ta.HoursAvailable}</label></Col>
       </Row>
     );
     return (

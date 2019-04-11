@@ -84,6 +84,7 @@ class UploadFilePage extends React.Component {
 
     */
     async function wbToSheets(wb) {
+      //Turns the workbook into a dictionary with sheet names as keys and sheets as values
       var wbObject = {}
       //console.log(JSON.stringify(Object.keys(wb.Sheets["GA"])))
 
@@ -106,10 +107,17 @@ class UploadFilePage extends React.Component {
       return wbObject;
     }
     function processWorkbook(wb) {
+      //turns wb to new_wb and then to final_data
+      //
+      /*final_data has 4 keys:
+        ga_dict = dictionary that stores ga objects with uuid as keys
+        GA = list of ga's
+        class_dict = dictionary that stores class objects with key : COMP10001 is COMP1000 section 1
+        Classes = list of classes
+        editing a class in class_dict also edits it in classes, and vice versa; same for ga's
+      */
       
-      //Note: To check if str exists in list:
-      //if (list.indexOf(str)) >= 0) {}
-      //First: find all courses taken in the past, and get their grades
+
       //End: wb["GA"]["kault"].grades = 
       /*
       {
@@ -130,7 +138,6 @@ class UploadFilePage extends React.Component {
 
 
       console.log("NOW PROCESSING WORKBOOK");
-      console.log(wb);
       var new_wb = JSON.parse(JSON.stringify(wb)); // allows it to copy the values, and not the reference
       
       for (let y = 0; y < new_wb['Registration History'].length; y++) {
@@ -149,7 +156,6 @@ class UploadFilePage extends React.Component {
         }
         
       }
-      console.log(new_wb);
       //Part two: Generate current schedules
       var gaClasses = new_wb['GA schedules'];
       for (let x = 0; x < gaClasses.length; x++) {
@@ -157,23 +163,116 @@ class UploadFilePage extends React.Component {
         if (new_wb['ga_dict'][course['uuid']] == undefined) {continue;}
         let ga = new_wb['ga_dict'][course['uuid']];
 
-        let schedule = [];
-
-        schedule.push(course['Days']);
-        schedule.push(course['Start_Time']);
-        schedule.push(course['Stop_Time']);
-        ga.schedule.push(schedule);
-        new_wb['ga_dict'][course['uuid']] = ga;
+        let schedule = {};
+        if (course['Days'] != "") {
+          schedule['Days'] = course['Days'];
+          schedule['Start_Time'] = parseInt(course['Start_Time']);
+          schedule['Stop_Time'] = parseInt(course['Stop_Time']);
+          ga.schedule.push(schedule);
+          new_wb['ga_dict'][course['uuid']] = ga;
+        }
         
       }
-      console.log(new_wb);
-      
+
       var final_data = JSON.parse(JSON.stringify(new_wb)); //a copy of the new_wb
-      delete final_data['Registration History'];
-      delete final_data['GA schedules'];
-      console.log(final_data);
+
+      //Part 3: Making sure the ga_dict matches the GA array
+      delete final_data['GA'];
+      final_data['GA'] = []
+      for(var key in final_data['ga_dict']) {
+        final_data['GA'].push(final_data['ga_dict'][key]);
+
+      }
+      //part 4: Giving each class a schedule and making a class dictionary
+      //Using Key Subject_Area+ Course_Number+Section_Number
+      final_data['class_dict'] = {};
+      for (var key in final_data['Classes']) {
+        let course = final_data['Classes'][key];
+        course.schedule = {};
+        course.schedule['Days'] = course['Days'];
+        course.schedule['Start_Time'] = parseInt(course['Start_Time']);
+        course.schedule['Stop_Time'] = parseInt(course['Stop_Time']);
+        let course_key = course['Subject_Area'] + course['Course_Number'] + course['Section_Number'];
+        final_data['class_dict'][course_key] = course;
+      }
 
       
+      
+      delete final_data['Registration History'];
+      delete final_data['GA schedules'];
+      console.log("FINISHED PROCESSING WORKBOOK, here is final_data:")
+      console.log(final_data);
+      var notes = "";
+      for (var i = 0; i < 20; i++) {
+        let ga = final_data['GA'][i];
+        let course = final_data['Classes'][0];
+        ga['notes'] = "";
+        checkSchedule(ga, course, notes);
+        checkGrade(ga, course, notes);
+        console.log("For ga " + ga['uuid'] + " and course " + course['Course_Number'] + ":");
+        console.log(ga['notes']);
+        
+      }
+
+      //NOTE: When you edit a ga in ga_dict, it will change in GA as well, and vice versa
+      //This goes for classes as well; What we have is 
+
+      
+    }
+
+    //takes a GA and a course
+    //returns if that GA made an A in that course
+    //edits notes to say what grade GA got in that course
+    function checkGrade(ga, course, notes) {
+      let courseName = course['Subject_Area'] + course['Course_Number'];
+      let grade = ga.grades[courseName];
+      if (grade == undefined) {
+        ga['notes'] += "\nThis student hasn't taken the course at University of Memphis.";
+        
+      }
+      else {
+        ga['notes'] += "\nThis student got a grade of " + grade + " in this course.";
+      
+      }
+      return (grade == 'A' || grade == 'A-' || grade == 'A+');
+    }
+
+
+    //takes a ga and a course object
+    //returns if that GA is free at the time of that class
+    //edits notes to say that the GA is free or not
+    function checkSchedule(ga, course, notes) {
+      
+      var c = JSON.parse(JSON.stringify(course.schedule));
+      c['Days'] = c['Days'].split('');
+      for (var i = 0; i < ga.schedule.length; i++) {
+        var g = JSON.parse(JSON.stringify(ga.schedule[i])); // copy by value, so we don't edit the original schedule
+        
+        g['Days'] = g['Days'].split('');
+        var union = [...new Set([...c['Days'], ...g['Days']])]; 
+        // ^ Takes the union of the sets of days
+        //For example, 'WF' becomes ['W', 'F'] and then see if any overlap
+        //If this union's size is now as long as the two combined, none overlapped.
+        if (union.length != c['Days'].length + g['Days'].length) {
+          /*DEBUG
+          console.log("DAYS OVERLAP");
+          console.log("c['Start_Time']:" + c['Start_Time'])
+          console.log("c['Stop_Time']:" + c['Stop_Time'])
+          console.log("g['Start_Time']:" + g['Start_Time'])
+          console.log("g['Stop_Time']:" + g['Stop_Time'])*/
+          //At least one day overlaps, so check the hours
+          if ((c['Start_Time'] <= g['Start_Time'] && g['Start_Time'] <= c['Stop_Time'])
+          ||  (c['Start_Time'] <= g['Stop_Time'] && g['Stop_Time'] <= c['Stop_Time'])) {
+            //If the ga's class's start or stop time lies between the class's start and stop time, then there is a conflict.
+            ga['notes'] += "This student has a class at that time.";
+            return false;
+          }
+
+        }        
+      }
+      //We didn't find a conflict
+      ga['notes'] += "This student is free at that time";
+      return true;
     }
 
 
@@ -220,6 +319,7 @@ class UploadFilePage extends React.Component {
           
           
         }
+        
         /*
           Method for checking if a student has time or not:
           - go through each of the days, and each of the times on each of those days

@@ -103,12 +103,12 @@ class Home extends React.Component {
     console.log(courseKey);
     this.props.nameSheet.map((row) => {
 
-        if (row[1] === 'Shima') {
-          const ta = document.getElementById(row[2]);
-          ta.classList.remove("text-white");
-          ta.classList.add("text-success");
-          
-        }
+        
+        const ta = document.getElementById(row[2]);
+        ta.classList.remove("text-white");
+        ta.classList.add("text-success");
+        
+        
 
         return null;
     });

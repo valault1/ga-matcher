@@ -107,13 +107,17 @@ class Home extends React.Component {
           const ta = document.getElementById(row[2]);
           ta.classList.remove("text-white");
           ta.classList.add("text-success");
+          
         }
 
         return null;
     });
   }
-
-
+  //takes a ga and a course object
+  //returns if that GA is GOOD, BAD, or
+  check(ga, course) {
+    
+  }
 
   render() {
 
@@ -168,11 +172,13 @@ class Home extends React.Component {
 
     });
 
-
+    var text = "hello.";
+    text += "\n this is my text";
 
     const gaMap = this.props.nameSheet.map((row) =>
       <Row>
-        <Col><Label className="text-white" id={row[2]}>{row[1]}</Label></Col>
+        <Col><Label className="text-white" id={row[2]} 
+        title={row[3]} > {row[1]}</Label></Col>
         <Col><label>{row[6]}</label></Col>
       </Row>
     );

@@ -102,13 +102,15 @@ class Index extends Component {
 
   };
 
-
-  addAvailableTa(courseTa, crn, taIndex, UofMID) {
+  //This function will be taking care of switching out and adding the availableTa to the correct course.
+  addAvailableTa(courseTa, crn, taIndex, uofmID, prevUofmID, inputID, hours) {
     console.log("I am in the addAvailableTa function");
     console.log(courseTa);
     console.log(crn);
     console.log(taIndex);
-    console.log(UofMID);
+    console.log(uofmID);
+    console.log(hours);
+
 
 
     console.log(this.state.courses);
@@ -117,7 +119,9 @@ class Index extends Component {
     // TaArray[0] = courseTa;
     // console.log(TaArray);
     let that = this;
-
+    let coursesObject = this.state.courses; // will be used to make the new array of course objects.
+    console.log(coursesObject);
+    let tasObject = this.state.tas; // will be used to make the new array of tas objects.
     // let courseObject = this.state.courses;
     // console.log(courseObject);
     // courseObject[0].CourseTA[0] = courseTa;
@@ -131,20 +135,68 @@ class Index extends Component {
       if (course.crn === crn)
       {
         //console.log(TaArray);
-        console.log("Hello");
+        // console.log("Hello");
+        //
+        // let courseObjectTest = that.state.courses;
+        // console.log(taIndex);
+        // courseObjectTest[index].CourseTA[taIndex] = courseTa;
+        // courseObjectTest[index].TaUofMID[taIndex] = UofMID;
+        //
+        // that.setState({
+        //    courses: courseObjectTest,
+        // });
 
-        let courseObjectTest = that.state.courses;
-        console.log(taIndex);
-        courseObjectTest[index].CourseTA[taIndex] = courseTa;
-        courseObjectTest[index].TaUofMID[taIndex] = UofMID;
-
-        that.setState({
-           courses: courseObjectTest,
-        });
+        coursesObject[index].CourseTA[taIndex] = courseTa;
+        coursesObject[index].TaUofMID[taIndex] = uofmID;
 
       }
       index++;
     });
+
+    let indexForTaArray = 0;
+    this.state.tas.forEach(function(ta) {
+      if (prevUofmID === ta.UofMID)
+      {
+        if (inputID === tasObject[indexForTaArray].inputsUsed[0]) {
+            console.log("I am in here the first if statement changing prevUofmID hours and InputID");
+          tasObject[indexForTaArray].HoursUsed[0] = "0";
+          tasObject[indexForTaArray].inputsUsed[0] = '';
+        }
+        else if(inputID === tasObject[indexForTaArray].inputsUsed[1]) {
+          console.log("I am in here the else if statement changing prevUofmID hours and InputID");
+          tasObject[indexForTaArray].HoursUsed[1] = "0";
+          tasObject[indexForTaArray].inputsUsed[1] = '';
+        }
+        else {
+          console.log("I am in here the else statement changing prevUofmID hours and InputID");
+          tasObject[indexForTaArray].HoursUsed[2] = "0";
+          tasObject[indexForTaArray].inputsUsed[2] = '';
+        }
+
+      }
+
+      if (ta.UofMID === uofmID && !(hours === undefined)) {
+        console.log("I am in the loop");
+            if (tasObject[indexForTaArray].inputsUsed[0] === '' || inputID === tasObject[indexForTaArray].inputsUsed[0]) {
+                console.log("I am in here the first if statement");
+              tasObject[indexForTaArray].HoursUsed[0] = hours;
+              tasObject[indexForTaArray].inputsUsed[0] = inputID;
+            }
+            else if(tasObject[indexForTaArray].inputsUsed[1] === '' || inputID === tasObject[indexForTaArray].inputsUsed[1]) {
+              console.log("I am in here the else if statement");
+              tasObject[indexForTaArray].HoursUsed[1] = hours;
+              tasObject[indexForTaArray].inputsUsed[1] = inputID;
+            }
+            else {
+              console.log("I am in here the else statement");
+              tasObject[indexForTaArray].HoursUsed[2] = hours;
+              tasObject[indexForTaArray].inputsUsed[2] = inputID;
+            }
+      }
+
+
+      ++indexForTaArray;
+    })
     console.log(this.state.courses[0].CourseTA[0]);
   }
 

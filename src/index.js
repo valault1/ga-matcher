@@ -26,6 +26,7 @@ class Index extends Component {
     this.addNamesCourses = this.addNamesCourses.bind(this);
     this.addAvailableTa = this.addAvailableTa.bind(this);
     this.deleteAvailableTa = this.deleteAvailableTa.bind(this);
+    this.updatingHoursUsed = this.updatingHoursUsed.bind(this);
     this.state = {
       nameSheet:[],
       courseSheet:[],
@@ -44,17 +45,33 @@ class Index extends Component {
         CourseEndTime: "1600",
         English_Preffered: true
       }],
-      tas: [{
+      tas: [
+        {
         firstName: "Hudson",
         lastName: "Gribble",
         coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
         CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
         HoursAvailable: 15,
-        HourseUsed: 0,
+        HoursUsed: [0,0,0],
+        inputsUsed: ['','',''],
         UofMID: "U045345",
         available: true,
         english: true
-      }]
+        },
+        {
+          firstName: "Hunter",
+          lastName: "Gribble",
+          coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+          CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+          HoursAvailable: 15,
+          HoursUsed: [0,0,0],
+          inputsUsed: ['','',''],
+          UofMID: "U045367",
+          available: true,
+          english: true
+        }
+
+    ]
     }
 
   };
@@ -140,13 +157,78 @@ class Index extends Component {
                   coursesTa: dropDown});
   }
 
+
+  updatingHoursUsed(inputID, hours, uofmID, prevUofmID) {
+    console.log("Hey I have made it to the updating Hours function");
+    console.log(inputID);
+    console.log(hours);
+    console.log(uofmID);
+
+    console.log(prevUofmID); // This will be used to switch Students
+    let tasObject = this.state.tas;
+
+    console.log(tasObject);
+
+
+    let index = 0;
+    //This will be used for updating the state of the TA
+
+    this.state.tas.forEach((ta) => {
+      //IF the first index is empty put it in there else go down the array and find an open spot.
+      if (ta.UofMID === uofmID) {
+        console.log("I am in the loop");
+            if (tasObject[index].inputsUsed[0] === '') {
+                console.log("I am in here the first if statement");
+              tasObject[index].HoursUsed[0] = hours;
+              tasObject[index].inputsUsed[0] = inputID;
+            }
+            else if(tasObject[index].inputsUsed[1] === '') {
+              console.log("I am in here the else if statement");
+              tasObject[index].HoursUsed[1] = hours;
+              tasObject[index].inputsUsed[1] = inputID;
+            }
+            else {
+              console.log("I am in here the else statement");
+              tasObject[index].HoursUsed[2] = hours;
+              tasObject[index].inputsUsed[2] = inputID;
+            }
+      }
+
+      // if (ta.UofMID === prevUofmID) {
+      //       if (tasObject[index].inputID[0] === inputID) {
+      //         tasObject[index].HoursUsed[0] = '';
+      //         tasObject[index].inputID[0] = '';
+      //       }
+      //
+      //       else if(tasObject[index].inputID[1] === inputID) {
+      //         tasObject[index].HoursUsed[1] = '';
+      //         tasObject[index].inputID[1] = '';
+      //       }
+      //       else {
+      //         tasObject[index].HoursUsed[2] = hours;
+      //         tasObject[index].inputID[2] = inputID;
+      //       }
+      // }
+      ++index;
+    });
+
+    this.setState({
+      tas: tasObject
+    });
+
+
+
+
+
+  }
+
   render() {
     console.log(this.state);
     return (
       <BrowserRouter>
         <Switch>
           <Route path="/home"
-          render={props => <Home {...props} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} courses={this.state.courses} tas={this.state.tas} />} />
+          render={props => <Home {...props} updatingHoursUsed={this.updatingHoursUsed.bind(this)} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} courses={this.state.courses} tas={this.state.tas} />} />
           <Route
             path="/upload-page"
             render={(props) => <UploadFilePage {...props} addNamesCourses={this.addNamesCourses} />}

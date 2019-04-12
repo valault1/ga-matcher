@@ -129,8 +129,15 @@ class Home extends React.Component {
     console.log(this.state.input3);
   }
 
-  testFunction(event) {
-    console.log("Blur event working");
+
+  //This event makes the hours goes to the Ta's hoursUsed.
+  handleOnBlurInput(uofmID, event) {
+    console.log(event.target.value);
+    console.log(event.target.id);
+    console.log(uofmID);
+    this.props.updatingHoursUsed(event.target.id, event.target.value, uofmID);
+
+
   }
 
   render() {
@@ -141,9 +148,12 @@ class Home extends React.Component {
 
     const dropDownMenu = (crn, taIndex) => {
 
-      return (this.props.tas.map((ta) =>
-        <a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.lastName, crn, taIndex, ta.UofMID)}>{ta.lastName}</a>
-      )
+      return (this.props.tas.map((ta) => {
+        // If the Ta is not available then do not show them as an option for selection.
+        if (ta.available === true)  {
+        return (<a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.lastName, crn, taIndex, ta.UofMID)}>{ta.firstName + " " + ta.lastName}</a>);
+        }
+      })
     );
     }
 
@@ -174,13 +184,13 @@ class Home extends React.Component {
       );
     }
 
-    const makeInput = (id, TaID) => {
+    const makeInput = (id, taID) => {
       return (
         <Input
           id={id}
           placeholder="TA's Hours"
-          onChange={this.handleInputChange.bind(this, TaID)}
-          onBlur={this.testFunction.bind(this)}
+          onChange={this.handleInputChange.bind(this, taID)}
+          onBlur={this.handleOnBlurInput.bind(this, taID)}
           >
           </Input>
       );
@@ -194,7 +204,7 @@ class Home extends React.Component {
       <Row>
         <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
         <Col><label>{row.TAHOURSNeeded}</label></Col>
-        <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
+        <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0,)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
         <Col>{dropdown(id+1, row.CourseTA[1], row.crn, 1)}<label><font color="green">Hours</font></label></Col>
         <Col>{dropdown(id+2, row.CourseTA[2], row.crn, 2)}<t/><label><font color="green">Hours</font></label></Col>
       </Row>
@@ -204,11 +214,19 @@ class Home extends React.Component {
 
 
 
-    const gaMap = this.props.tas.map((ta) =>
+    const gaMap = this.props.tas.map((ta) => {
+      //If the Ta is not available do not display the Ta
+      if(ta.available === true) {
+      return (
       <Row>
-        <Col><Label className="text-white" id={ta.UofMID}>{ta.lastName}</Label></Col>
-        <Col><label>{ta.HoursAvailable}</label></Col>
+        <Col><Label className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</Label></Col>
+        {/*//This will be used to tell how many more hours the Ta has available*/}
+        <Col><label>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</label></Col>
       </Row>
+      );
+      }
+
+    }
     );
     return (
       <>

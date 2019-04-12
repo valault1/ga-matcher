@@ -158,14 +158,28 @@ class Home extends React.Component {
     });
   }
 
-  handleInputChange(TaID, event) {
-    console.log(event.target.id);
-    console.log(TaID);
+//This is taking care of the input change and storing the value of inputs//
+//If a Non is input as the value of the input it will always go to 0.
+  handleInputChange(uofmID, event) {
+    //console.log(event.target.id);
+    //console.log(TaID);
     //let name = event.target.name;
+    //Checking if the input value is an integer or not.
+    console.log("Hours");
+    console.log(event.target.value);
 
+    if (isNaN(event.target.value)) {
+      this.setState({
+        [event.target.id]: '0'
+      });
+      //this.props.updatingHoursUsed(event.target.id, 0, uofmID);
+    }
+    else {
     this.setState({
       [event.target.id]: event.target.value
     });
+    //this.props.updatingHoursUsed(event.target.id, event.target.id, uofmID);
+  }
     console.log("this is the id of the input " + event.target.id);
     console.log(this.state[event.target.id]);
   }
@@ -176,7 +190,14 @@ class Home extends React.Component {
     console.log(event.target.value);
     console.log(event.target.id);
     console.log(uofmID);
-    this.props.updatingHoursUsed(event.target.id, event.target.value, uofmID);
+    console.log("I am in the updating Blur Function");
+    if(isNaN(event.target.value) || event.target.value === "") {
+      console.log("I am in the not a number statement");
+    this.props.updatingHoursUsed(event.target.id, '0', uofmID);
+    }
+    else {
+      this.props.updatingHoursUsed(event.target.id, event.target.value, uofmID);
+    }
 
 
   }

@@ -1,4 +1,5 @@
 import React from "react";
+import classnames from "classnames";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
@@ -288,9 +289,9 @@ class Home extends React.Component {
       if(ta.available === true) {
       return (
       <Row>
-        <Col><Label className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</Label></Col>
+        <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-white">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
         {/*//This will be used to tell how many more hours the Ta has available*/}
-        <Col><label>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</label></Col>
+        <Col><label className="text-white"><h4 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
       </Row>
       );
       }

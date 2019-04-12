@@ -57,20 +57,56 @@ class Index extends Component {
         CourseStartTime: "1400",
         CourseEndTime: "1600",
         English_Preffered: true
+        },
+        {
+        courseName: "Comp-2900",
+        crn: 5242,
+        TAHOURSNeeded: 15,
+        TAHOURSUsed: 0,
+        TA_Attendance: true,
+        CourseTA: ["TA's", "TA's", "TA's"],
+        TaUofMID: ["TaID", "TaID", "TaID"],
+        CourseStartTime: "1400",
+        CourseEndTime: "1600",
+        English_Preffered: true
+        },
+        {
+        courseName: "Comp-3100",
+        crn: 23442,
+        TAHOURSNeeded: 15,
+        TAHOURSUsed: 0,
+        TA_Attendance: true,
+        CourseTA: ["TA's", "TA's", "TA's"],
+        TaUofMID: ["TaID", "TaID", "TaID"],
+        CourseStartTime: "1400",
+        CourseEndTime: "1600",
+        English_Preffered: true
+        },
+        {
+        courseName: "Comp-3300",
+        crn: 8442,
+        TAHOURSNeeded: 15,
+        TAHOURSUsed: 0,
+        TA_Attendance: true,
+        CourseTA: ["TA's", "TA's", "TA's"],
+        TaUofMID: ["TaID", "TaID", "TaID"],
+        CourseStartTime: "1400",
+        CourseEndTime: "1600",
+        English_Preffered: true
         }
       ],
       tas: [
         {
-        firstName: "Hudson",
-        lastName: "Gribble",
-        coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
-        CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
-        HoursAvailable: 15,
-        HoursUsed: [0,0,0],
-        inputsUsed: ['','',''],
-        UofMID: "U045345",
-        available: true,
-        english: true
+          firstName: "Hudson",
+          lastName: "Gribble",
+          coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+          CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+          HoursAvailable: 15,
+          HoursUsed: [0,0,0],
+          inputsUsed: ['','',''],
+          UofMID: "U045345",
+          available: true,
+          english: true
         },
         {
           firstName: "Hunter",
@@ -95,7 +131,43 @@ class Index extends Component {
           UofMID: "U045390",
           available: true,
           english: true
-        }
+        },
+        {
+          firstName: "Hollie",
+          lastName: "Gillihan",
+          coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+          CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+          HoursAvailable: 15,
+          HoursUsed: [0,0,0],
+          inputsUsed: ['','',''],
+          UofMID: "U245390",
+          available: true,
+          english: true
+        },
+        {
+          firstName: "Alex",
+          lastName: "Stackley",
+          coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+          CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+          HoursAvailable: 15,
+          HoursUsed: [0,0,0],
+          inputsUsed: ['','',''],
+          UofMID: "U445390",
+          available: true,
+          english: true
+        },
+        {
+          firstName: "Johnathan",
+          lastName: "Glenn",
+          coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+          CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+          HoursAvailable: 15,
+          HoursUsed: [0,0,0],
+          inputsUsed: ['','',''],
+          UofMID: "U545390",
+          available: true,
+          english: true
+        },
 
     ]
     }

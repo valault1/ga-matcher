@@ -33,7 +33,8 @@ class Index extends Component {
       coursesTa:[],
       availableTAs:[],
 
-      courses: [{
+      courses: [
+        {
         courseName: "Comp-1900",
         crn: 5432,
         TAHOURSNeeded: 25,
@@ -44,7 +45,20 @@ class Index extends Component {
         CourseStartTime: "1400",
         CourseEndTime: "1600",
         English_Preffered: true
-      }],
+        },
+        {
+        courseName: "Comp-2700",
+        crn: 5442,
+        TAHOURSNeeded: 15,
+        TAHOURSUsed: 0,
+        TA_Attendance: true,
+        CourseTA: ["TA's", "TA's", "TA's"],
+        TaUofMID: ["TaID", "TaID", "TaID"],
+        CourseStartTime: "1400",
+        CourseEndTime: "1600",
+        English_Preffered: true
+        }
+      ],
       tas: [
         {
         firstName: "Hudson",
@@ -67,6 +81,18 @@ class Index extends Component {
           HoursUsed: [0,0,0],
           inputsUsed: ['','',''],
           UofMID: "U045367",
+          available: true,
+          english: true
+        },
+        {
+          firstName: "Val",
+          lastName: "Ault",
+          coursesTaken: {"COMP-1900":"A", "COMP-2700":"B"},
+          CourseRecommendToTeach: ["COMP-1900", "COMP-2700"],
+          HoursAvailable: 15,
+          HoursUsed: [0,0,0],
+          inputsUsed: ['','',''],
+          UofMID: "U045390",
           available: true,
           english: true
         }
@@ -177,12 +203,12 @@ class Index extends Component {
       //IF the first index is empty put it in there else go down the array and find an open spot.
       if (ta.UofMID === uofmID) {
         console.log("I am in the loop");
-            if (tasObject[index].inputsUsed[0] === '') {
+            if (tasObject[index].inputsUsed[0] === '' || inputID === tasObject[index].inputsUsed[0]) {
                 console.log("I am in here the first if statement");
               tasObject[index].HoursUsed[0] = hours;
               tasObject[index].inputsUsed[0] = inputID;
             }
-            else if(tasObject[index].inputsUsed[1] === '') {
+            else if(tasObject[index].inputsUsed[1] === '' || inputID === tasObject[index].inputsUsed[1]) {
               console.log("I am in here the else if statement");
               tasObject[index].HoursUsed[1] = hours;
               tasObject[index].inputsUsed[1] = inputID;

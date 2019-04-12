@@ -151,7 +151,7 @@ class Home extends React.Component {
       return (this.props.tas.map((ta) => {
         // If the Ta is not available then do not show them as an option for selection.
         if (ta.available === true)  {
-        return (<a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.lastName, crn, taIndex, ta.UofMID)}>{ta.firstName + " " + ta.lastName}</a>);
+        return (<a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.firstName + " " + ta.lastName, crn, taIndex, ta.UofMID)}>{ta.firstName + " " + ta.lastName}</a>);
         }
       })
     );
@@ -205,8 +205,8 @@ class Home extends React.Component {
         <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
         <Col><label>{row.TAHOURSNeeded}</label></Col>
         <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0,)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
-        <Col>{dropdown(id+1, row.CourseTA[1], row.crn, 1)}<label><font color="green">Hours</font></label></Col>
-        <Col>{dropdown(id+2, row.CourseTA[2], row.crn, 2)}<t/><label><font color="green">Hours</font></label></Col>
+        <Col>{dropdown(id+1, row.CourseTA[1], row.crn, 1)}{makeInput("input" + (id+1), row.TaUofMID[1])}</Col>
+        <Col>{dropdown(id+2, row.CourseTA[2], row.crn, 2)}{makeInput("input" + (id+2), row.TaUofMID[2])}</Col>
       </Row>
     );
 

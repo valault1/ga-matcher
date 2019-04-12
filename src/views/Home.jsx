@@ -80,7 +80,12 @@ class Home extends React.Component {
   //This function does all of the css for having the dropdown working.
   //This function will aslso keep track of the prevUofmID for switching GA's
   handleDropdownClick(dropdownId, dropWrapId, dropMenuId, prevUofmID, e) {
+    //Start of saving the state of prevUofmID
+    this.setState({
+      [dropdownId] : prevUofmID
+    });
     //<!-- Functional drop down -->
+
     console.log("HandlingClick");
     console.log(dropdownId);
 
@@ -100,20 +105,33 @@ class Home extends React.Component {
     }
   //<!-- end of Functional dropdown logic -->
 
-  //Start of saving the state of prevUofmID
-  this.setState({
-    [dropdownId] : prevUofmID
-  });
 
-  console.log(this.state[dropdownId]);
+
+
+  //console.log(this.state[dropdownId]);
 
   }
 
 
 
 
-  handleSelectClick(lastName, crn, taIndex, uofmID, prevUofmID, inputID, event) {
+  handleSelectClick(lastName, crn, taIndex, uofmID, prevUofmID, inputID, dropdownId, dropWrapId, dropMenuId, event) {
     console.log(lastName);
+
+    const dropDown = document.getElementById(dropdownId);
+    const dropDownMenu = document.getElementById(dropMenuId);
+    const dropDownWrap = document.getElementById(dropWrapId);
+
+    if (dropDown.getAttribute("aria-expanded") === "false") {
+      dropDown.setAttribute("aria-expanded", "true");
+      dropDownMenu.setAttribute("class", "dropdown-menu show");
+      dropDownWrap.setAttribute("class", "dropdown show");
+    }
+    else {
+      dropDown.setAttribute("aria-expanded", "false");
+      dropDownMenu.setAttribute("class", "dropdown-menu");
+      dropDownWrap.setAttribute("class", "dropdown");
+    }
 
   //if (this.state[inputID] === undefined )
   //{
@@ -169,12 +187,12 @@ class Home extends React.Component {
 
 
 
-    const dropDownMenu = (crn, taIndex, prevUofmID, inputID) => {
+    const dropDownMenu = (crn, taIndex, prevUofmID, inputID, dropdownId, dropWrapId, dropMenuId) => {
 
       return (this.props.tas.map((ta) => {
         // If the Ta is not available then do not show them as an option for selection.
         if (ta.available === true)  {
-        return (<a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.firstName + " " + ta.lastName, crn, taIndex, ta.UofMID, prevUofmID, inputID)}>{ta.firstName + " " + ta.lastName}</a>);
+        return (<a class="dropdown-item" onClick={this.handleSelectClick.bind(this, ta.firstName + " " + ta.lastName, crn, taIndex, ta.UofMID, prevUofmID, inputID, dropdownId, dropWrapId, dropMenuId)}>{ta.firstName + " " + ta.lastName}</a>);
         }
       })
     );
@@ -186,6 +204,8 @@ class Home extends React.Component {
       let dropdownId = dropdownName + "dropDown" + dropid;
       let dropWrapId = dropdownName + "dropDownWrap" + dropid;
       let dropMenuId = dropdownName + "dropDownMenu" + dropid;
+
+      console.log(dropid);
 
       return (
       <div class="dropdown"
@@ -201,7 +221,7 @@ class Home extends React.Component {
               {dropdownName}
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id={dropMenuId}>
-              {dropDownMenu(crn, taIndex, prevUofmID, inputID)}
+              {dropDownMenu(crn, taIndex, prevUofmID, inputID, dropdownId, dropWrapId, dropMenuId)}
             </div>
         </div>
       );
@@ -220,18 +240,23 @@ class Home extends React.Component {
     }
 
     let id = 0
-    const courseMap = this.props.courses.map((row, id) => {
+    let id1 = 1
+    let id2 = 2
+    const courseMap = this.props.courses.map((row) => {
 
-      id += 3;
+      id = id + 3;
+      id1 = id1 + 3;
+      id2 = id2 + 3;
       return(
       <Row>
         <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
         <Col><label>{row.TAHOURSNeeded}</label></Col>
         <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
-        <Col>{dropdown(id+1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1])}</Col>
-        <Col>{dropdown(id+2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2])}</Col>
+        <Col>{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1])}</Col>
+        <Col>{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2])}</Col>
       </Row>
     );
+
 
     });
 

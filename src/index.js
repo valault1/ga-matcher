@@ -110,7 +110,7 @@ class Index extends Component {
     console.log(taIndex);
     console.log(uofmID);
     console.log(hours);
-
+    console.log(prevUofmID);
 
 
     console.log(this.state.courses);
@@ -198,6 +198,11 @@ class Index extends Component {
       ++indexForTaArray;
     })
     console.log(this.state.courses[0].CourseTA[0]);
+
+    this.setState({
+      courses: coursesObject,
+      tas: tasObject
+    });
   }
 
   deleteAvailableTa(courseTa) {

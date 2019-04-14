@@ -281,11 +281,11 @@ class Index extends Component {
     console.log(courseTa);
   }
 
-  addNamesCourses(newNameSheet, newCourseSheet) {
+  addNamesCourses(new_tas, new_courses, new_tas_dict, new_courses_dict) {
 
     let dropDown = []
 
-    newCourseSheet.forEach((element) => {
+    new_tas.forEach((element) => {
       console.log(element);
 
       if(element[2] === "Key") {
@@ -306,10 +306,14 @@ class Index extends Component {
     console.log(dropDown);
 
 
-    this.setState({nameSheet: newNameSheet,
-                  courseSheet: newCourseSheet,
-                  availableTAs: newNameSheet,
-                  coursesTa: dropDown});
+    this.setState({nameSheet: new_tas,
+                  courseSheet: new_courses,
+                  availableTAs: new_tas,
+                  coursesTa: dropDown,
+                  courses: new_courses,
+                  tas: new_tas,
+                  tas_dict: new_tas_dict,
+                  courses_dict: new_courses_dict});
   }
 
 
@@ -383,7 +387,7 @@ class Index extends Component {
       <BrowserRouter>
         <Switch>
           <Route path="/home"
-          render={props => <Home {...props} updatingHoursUsed={this.updatingHoursUsed.bind(this)} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} courses={this.state.courses} tas={this.state.tas} />} />
+          render={props => <Home {...props} updatingHoursUsed={this.updatingHoursUsed.bind(this)} addAvailableTa={this.addAvailableTa.bind(this)} deleteAvailableTa={this.deleteAvailableTa.bind(this)} testProps={this.state}availableTas={this.state.availableTas} coursesTa={this.state.courseTa} nameSheet={this.state.nameSheet} courseSheet={this.state.courseSheet} courses={this.state.courses} tas={this.state.tas} tas_dict={this.state.tas_dict} courses_dict={this.state.courses_dict} />} />
           <Route
             path="/upload-page"
             render={(props) => <UploadFilePage {...props} addNamesCourses={this.addNamesCourses} />}

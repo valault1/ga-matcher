@@ -83,7 +83,7 @@ class UploadFilePage extends React.Component {
     }
 
     */
-    async function wbToSheets(wb) {
+    function wbToSheets(wb) {
       //Turns the workbook into a dictionary with sheet names as keys and sheets as values
       var wbObject = {}
       //console.log(JSON.stringify(Object.keys(wb.Sheets["GA"])))
@@ -103,7 +103,7 @@ class UploadFilePage extends React.Component {
       }
 
      
-      processWorkbook(JSON.parse(JSON.stringify(wbObject)));
+      
       return wbObject;
     }
     function processWorkbook(wb) {
@@ -181,6 +181,14 @@ class UploadFilePage extends React.Component {
       final_data['GA'] = []
       for(var key in final_data['ga_dict']) {
         final_data['GA'].push(final_data['ga_dict'][key]);
+        final_data['ga_dict'][key].HoursAvailable = final_data['ga_dict'][key]['Hours'];
+        final_data['ga_dict'][key].HoursUsed = [0,0,0];
+        final_data['ga_dict'][key].inputsUsed = ['','',''];
+        final_data['ga_dict'][key].UofMID = final_data['ga_dict'][key]['U#'];
+        final_data['ga_dict'][key].available = true;
+        final_data['ga_dict'][key].firstName = final_data['ga_dict'][key]['First'];
+        final_data['ga_dict'][key].lastName = final_data['ga_dict'][key]['Last'];
+
 
       }
       //part 4: Giving each class a schedule and making a class dictionary
@@ -192,8 +200,28 @@ class UploadFilePage extends React.Component {
         course.schedule['Days'] = course['Days'];
         course.schedule['Start_Time'] = parseInt(course['Start_Time']);
         course.schedule['Stop_Time'] = parseInt(course['Stop_Time']);
-        let course_key = course['Subject_Area'] + course['Course_Number'] + course['Section_Number'];
+        let course_key = course['CRN'];
         final_data['class_dict'][course_key] = course;
+        /*updating courses to have this structure
+          {
+          courseName: "Comp-3100",
+          crn: 23442,
+          TAHOURSNeeded: 15,
+          TAHOURSUsed: 0,
+          TA_Attendance: true,
+          CourseTA: ["TA's", "TA's", "TA's"],
+          TaUofMID: ["TaID", "TaID", "TaID"],
+          CourseStartTime: "1400",
+          CourseEndTime: "1600",
+          English_Preffered: true
+          },
+        */
+          course.courseName = course['Subject_Area'] + course['Course_Number'];
+          course.crn = course['CRN'];
+          course.TAHOURSNeeded = course.TAHOURSNeeded;
+          course.TAHOURSUsed = 0;
+          course.CourseTA = ["TA's", "TA's", "TA's"];
+          course.TaUofMID = ["TaID", "TaID", "TaID"];
       }
 
       
@@ -216,7 +244,7 @@ class UploadFilePage extends React.Component {
 
       //NOTE: When you edit a ga in ga_dict, it will change in GA as well, and vice versa
       //This goes for classes as well; What we have is 
-
+      return final_data;
       
     }
 
@@ -292,7 +320,8 @@ class UploadFilePage extends React.Component {
         const wsname2 = wb.SheetNames[1];
         const ws2 = wb.Sheets[wsname2];
         /* Convert array of arrays */
-        var sheets = wbToSheets(JSON.parse(JSON.stringify(wb)));
+        var data = wbToSheets(JSON.parse(JSON.stringify(wb)));
+        var final_data = processWorkbook(JSON.parse(JSON.stringify(data)));
         
         //processWorkbook(sheets);
         sheet1 = XLSX.utils.sheet_to_json(ws1, {header:1});
@@ -402,7 +431,7 @@ class UploadFilePage extends React.Component {
         /* Update state */
         //console.log("courses: " + courses);
         //console.log("names: " + names);
-        that.props.addNamesCourses(sheet2, sheet1);
+        that.props.addNamesCourses(final_data['GA'], final_data['Classes'], final_data['ga_dict'], final_data['class_dict']);
         document.getElementById('home-link').click();
     };
     reader.readAsBinaryString(f);

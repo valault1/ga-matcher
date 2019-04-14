@@ -145,35 +145,47 @@ class Home extends React.Component {
 
   }
 
+  checkGrade(ga, course, notes) {
+    ga['notes'] = notes;
+    let courseName = course['Subject_Area'] + course['Course_Number'];
+    let grade = ga.grades[courseName];
+    if (grade == undefined) {
+      ga['notes'] += "\nThis student hasn't taken " + course.courseName + " at University of Memphis.";
+      
+    }
+    else {
+      ga['notes'] += "\nThis student got a grade of " + grade + " in this course.";
+    
+    }
+    return true;
+    return (grade == 'A' || grade == 'A-' || grade == 'A+');
+  }
+
   courseClick(courseKey, event) {
     console.log(courseKey);
+    
+
     this.props.tas.map((ta) => {
 
-<<<<<<< HEAD
-        
-        const ta = document.getElementById(row[2]);
-        ta.classList.remove("text-white");
-        ta.classList.add("text-success");
-        
-        
-=======
-        if (ta.lastName === 'Gribble') {
+        if (this.checkGrade(ta, this.props.courses_dict[courseKey], '')) {
           const gradAssistant = document.getElementById(ta.UofMID);
-          gradAssistant.classList.remove("text-white");
-          gradAssistant.classList.add("text-success");
+          if (gradAssistant != undefined) {
+            gradAssistant.classList.remove("text-white");
+            gradAssistant.classList.add("text-success");
+            gradAssistant.title = ta['notes'];
+          }
+          else {
+            console.log("TA NOT FOUND: ");
+            console.log(ta);
+          }
         }
->>>>>>> hudson
 
         return null;
     });
+    console.log("this.props.tas_dict = ");
+    console.log(this.props.tas_dict);
+
   }
-<<<<<<< HEAD
-  //takes a ga and a course object
-  //returns if that GA is GOOD, BAD, or
-  check(ga, course) {
-    
-  }
-=======
 
 //This is taking care of the input change and storing the value of inputs//
 //If a Non is input as the value of the input it will always go to 0.
@@ -216,7 +228,6 @@ class Home extends React.Component {
       this.props.updatingHoursUsed(event.target.id, event.target.value, uofmID);
     }
 
->>>>>>> hudson
 
   }
 
@@ -289,7 +300,7 @@ class Home extends React.Component {
       return(
       <Row>
         <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
-        <Col><label>{row.TAHOURSNeeded}</label></Col>
+        <Col><label>{row.TAHOURSUsed} / {row.TAHOURSNeeded}</label></Col>
         <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
         <Col>{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1])}</Col>
         <Col>{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2])}</Col>
@@ -307,15 +318,9 @@ class Home extends React.Component {
       if(ta.available === true) {
       return (
       <Row>
-<<<<<<< HEAD
-        <Col><Label className="text-white" id={row[2]} 
-        title={row[3]} > {row[1]}</Label></Col>
-        <Col><label>{row[6]}</label></Col>
-=======
         <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-white">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
         {/*//This will be used to tell how many more hours the Ta has available*/}
         <Col><label className="text-white"><h4 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
->>>>>>> hudson
       </Row>
       );
       }
@@ -335,6 +340,7 @@ class Home extends React.Component {
                 Potential GA's<br/>
                 <Card>
                   <CardBody>
+                    
                     {gaMap}
                   </CardBody>
                 </Card>
@@ -345,6 +351,14 @@ class Home extends React.Component {
               COURSES
               <Card>
                 <CardBody>
+                  <Row>
+                    <Col><label>Class Name </label></Col>
+                    <Col><label>Number of Hours used  / needed</label></Col>
+                    <Col>Selected TA 1<br/>Hours Used</Col>
+                    <Col>Selected TA 3<br/>Hours Used</Col>
+                    <Col>Selected TA 2<br/>Hours Used</Col>
+                  </Row>
+                  <Row><hr/></Row>
                   {courseMap}
                 </CardBody>
               </Card>

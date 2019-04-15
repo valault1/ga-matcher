@@ -151,11 +151,11 @@ class Home extends React.Component {
     let grade = ga.grades[courseName];
     if (grade == undefined) {
       ga['notes'] += "\nThis student hasn't taken " + course.courseName + " at University of Memphis.";
-      
+
     }
     else {
       ga['notes'] += "\nThis student got a grade of " + grade + " in this course.";
-    
+
     }
     return true;
     return (grade == 'A' || grade == 'A-' || grade == 'A+');
@@ -163,7 +163,7 @@ class Home extends React.Component {
 
   courseClick(courseKey, event) {
     console.log(courseKey);
-    
+
 
     this.props.tas.map((ta) => {
 
@@ -316,13 +316,36 @@ class Home extends React.Component {
     const gaMap = this.props.tas.map((ta) => {
       //If the Ta is not available do not display the Ta
       if(ta.available === true) {
-      return (
-      <Row>
-        <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-white">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
-        {/*//This will be used to tell how many more hours the Ta has available*/}
-        <Col><label className="text-white"><h4 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
-      </Row>
-      );
+          if(ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) > 0) {
+            return (
+            <Row>
+              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-white">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              {/*//This will be used to tell how many more hours the Ta has available*/}
+
+              <Col><label className="text-white"><h4 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
+            </Row>
+            );
+          }
+          else if (ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) === 0) {
+            return (
+            <Row>
+              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-success">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              {/*//This will be used to tell how many more hours the Ta has available*/}
+
+              <Col><label className="text-success"><h4 className="text-success">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
+            </Row>
+            );
+          }
+          else {
+            return (
+            <Row>
+              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-danger">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              {/*//This will be used to tell how many more hours the Ta has available*/}
+
+              <Col><label className="text-danger"><h4 className="text-danger">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
+            </Row>
+            );
+          }
       }
 
     }
@@ -340,7 +363,7 @@ class Home extends React.Component {
                 Potential GA's<br/>
                 <Card>
                   <CardBody>
-                    
+
                     {gaMap}
                   </CardBody>
                 </Card>

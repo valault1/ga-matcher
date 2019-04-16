@@ -56,33 +56,8 @@ class UploadFilePage extends React.Component {
   
   handleSubmit(event) {
     event.preventDefault();
-    //takes in the default workbook generated, outputs a dictionary object ex
-    /*
-    {
-      "Registration History": [
-        class1,
-        class2...
-      ]
-      "Classes": [
-        class1,
-        class2...
-      ]
-      "GA Schedules": [
-        class1,
-        class2...
-      ]
-      "GA": [
-        ga1,
-        ga2...
-      ]
-      "GA Matchings": [
-        kault: "this will be replaced by his evaluation when you click a course button",
-        hgrbble1: "this will be replaced by his evaluation when you click a course button"
-        ...
-      ]
-    }
 
-    */
+    //Takes a wb object, returns a dictionary with sheets named after the sheets in the wb object
     function wbToSheets(wb) {
       //Turns the workbook into a dictionary with sheet names as keys and sheets as values
       var wbObject = {}
@@ -106,8 +81,10 @@ class UploadFilePage extends React.Component {
       
       return wbObject;
     }
+    //turns wb to new_wb and then to final_data
+    //Ends up with a list and dictionary of all classes and ta's, called final_data
     function processWorkbook(wb) {
-      //turns wb to new_wb and then to final_data
+      
       //
       /*final_data has 4 keys:
         ga_dict = dictionary that stores ga objects with uuid as keys
@@ -282,13 +259,6 @@ class UploadFilePage extends React.Component {
         //For example, 'WF' becomes ['W', 'F'] and then see if any overlap
         //If this union's size is now as long as the two combined, none overlapped.
         if (union.length != c['Days'].length + g['Days'].length) {
-          /*DEBUG
-          console.log("DAYS OVERLAP");
-          console.log("c['Start_Time']:" + c['Start_Time'])
-          console.log("c['Stop_Time']:" + c['Stop_Time'])
-          console.log("g['Start_Time']:" + g['Start_Time'])
-          console.log("g['Stop_Time']:" + g['Stop_Time'])*/
-          //At least one day overlaps, so check the hours
           if ((c['Start_Time'] <= g['Start_Time'] && g['Start_Time'] <= c['Stop_Time'])
           ||  (c['Start_Time'] <= g['Stop_Time'] && g['Stop_Time'] <= c['Stop_Time'])) {
             //If the ga's class's start or stop time lies between the class's start and stop time, then there is a conflict.
@@ -322,115 +292,6 @@ class UploadFilePage extends React.Component {
         /* Convert array of arrays */
         var data = wbToSheets(JSON.parse(JSON.stringify(wb)));
         var final_data = processWorkbook(JSON.parse(JSON.stringify(data)));
-        
-        //processWorkbook(sheets);
-        sheet1 = XLSX.utils.sheet_to_json(ws1, {header:1});
-        sheet2 = XLSX.utils.sheet_to_json(ws2, {header:1});
-        
-        
-        //In sheets, I'll store the values of the column names mapped to their index on each sheet
-        var sheets = {};
-        for (var i=0; i < wb.SheetNames.length; i++) {
-          //sheetName is the name of this sheet
-          var sheetName= wb.SheetNames[i];
-          //sheet is the content of this sheet
-          var sheet = wb.Sheets[sheetName];
-          //header is the row with the names of the values; ex. "Schedule"
-          var header = sheet[0];
-          
-
-          var csv = XLSX.utils.sheet_to_csv(sheet);
-          var parsed = Papa.parse(csv, {
-            header: true
-          })
-          //console.log(parsed);
-          sheets[sheetName] = parsed.data;
-          
-          
-        }
-        
-        /*
-          Method for checking if a student has time or not:
-          - go through each of the days, and each of the times on each of those days
-          - Read the class range, and make sure the beginning of the class is greater than the end number or lower than the beginning number
-          - Then check that the end of the class is less less than the begin number or greater than the end number
-          
-        */
-        /*
-        SHEETS
-        {
-          
-            GA's: 
-              [
-                { 
-                  name: Val
-                  lname: Ault
-                  English: true
-                  Schedule:
-                },
-                {
-                  name: Hudson
-                  lname: Gribble
-                  English: false
-                  Schedule: 
-                }
-              ]
-          
-            
-            Courses:
-              [
-                {
-                  course number: 4401
-                  CRN: 663012
-                  Teacher: Sen,
-                  Schedule: {
-                    M: ["1220-1325"]
-                    W: ["1220-1325"]
-                  }
-                },
-                {
-                  course number: 6040
-                  CRN: 663012
-                  Teacher: Fatih
-                }
-              ],
-
-              RegistrationHistory: {
-                U00511339: {
-                  currentSchedule: {
-                    M: "1420-1545"
-                    T: ["1120-1245", "1300-1425", "1440-1605"]
-                    W: [1420-1545]
-                    R: [1120-1245, 1300-1425, 1440-1605]
-                    F:
-                    S:
-
-
-                  }
-                  pastClasses: {
-                    COMP3410: 'A'
-
-                  }
-                }
-              }
-            
-          
-        }
-
-
-        */
-        console.log(sheets);
-        
-        var courses=[], names=[];
-        for(var i=1; i < sheet1.length; i++) {
-          courses.push(sheet1[i][2]);
-        }
-        for(var i=1; i < sheet2.length; i++) {
-          names.push(sheet2[i][1]);
-        }
-        /* Update state */
-        //console.log("courses: " + courses);
-        //console.log("names: " + names);
         that.props.addNamesCourses(final_data['GA'], final_data['Classes'], final_data['ga_dict'], final_data['class_dict']);
         document.getElementById('home-link').click();
     };
@@ -475,44 +336,6 @@ class UploadFilePage extends React.Component {
             </Col>
 
           </Row>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
-          a<br/>
         </Container>
       {/*<h1>This is the upload page.</h1><br/>*/}
 

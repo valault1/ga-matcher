@@ -127,16 +127,9 @@ class PagesNavbar extends React.Component {
                   <p className="d-lg-none d-xl-none">Twitter</p>
                 </NavLink>
               </NavItem>
-              <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  href="https://www.facebook.com/CreativeTim"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="Like us on Facebook"
-                >
-                  <i className="fab fa-facebook-square" />
-                  <p className="d-lg-none d-xl-none">Facebook</p>
+              <NavItem className="active">
+                <NavLink href="#pablo" onClick={e => e.preventDefault()}>
+                  <Link to="/upload-page" style={{ color:"white" }}>Upload Excel Sheet</Link>
                 </NavLink>
               </NavItem>
               <NavItem className="p-0">

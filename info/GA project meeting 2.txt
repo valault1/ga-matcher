@@ -2,3 +2,16 @@
 - CFIA coordinator (Dasgupta) (10 hrs)
 - Undergraduate, graduate coordinator - 10 hrs
 - LSP support (10 hrs)
+
+Meeting 3
+- Discard Master's Project, ind studies, Thesis, dissertation
+- Combine same time, same teacher to same class
+- take out R classes
+- Full TA's have 20, Half have 10
+- update colors
+- update number of hours used
+- Add enrollment number and teacher on display
+
+features to check:
+- Should teach or shouldn't teach
+- We want transcript instead of registration history

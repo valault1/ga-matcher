@@ -158,7 +158,7 @@ class Home extends React.Component {
 
     }
     return true;
-    return (grade == 'A' || grade == 'A-' || grade == 'A+');
+    return (grade == 'A' || grade == 'A-' || grade == 'A+' || grade == 'IP');
   }
 
   courseClick(courseKey, event) {
@@ -172,6 +172,7 @@ class Home extends React.Component {
           if (gradAssistant != undefined) {
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-success");
+            gradAssistant.class = 'text-success';
             gradAssistant.title = ta['notes'];
           }
           else {

@@ -177,9 +177,10 @@ class Home extends React.Component {
         if (this.checkGrade(ta, this.props.courses_dict[courseKey], '')) {
           const gradAssistant = document.getElementById(ta.UofMID);
           if (gradAssistant != undefined) {
+            console.log("Am I ever getting called");
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-success");
-            gradAssistant.class = 'text-success';
+            //gradAssistant.class = 'text-success';
             gradAssistant.title = ta['notes'];
           }
           else {
@@ -328,7 +329,7 @@ class Home extends React.Component {
           if(ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) > 0) {
             return (
             <Row>
-              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-white">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              <Col><Label className="text-white h3"><h5 className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-white"><h4 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
@@ -338,7 +339,7 @@ class Home extends React.Component {
           else if (ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) === 0) {
             return (
             <Row>
-              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-success">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              <Col><Label className="text-white h3"><h5 className="text-success" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-success"><h4 className="text-success">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
@@ -348,7 +349,7 @@ class Home extends React.Component {
           else {
             return (
             <Row>
-              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-danger">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              <Col><Label className="text-white h3" ><h5 className="text-danger" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-danger"><h4 className="text-danger">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
@@ -365,11 +366,11 @@ class Home extends React.Component {
         <div className="wrapper">
 
           <div className="main">
-            <Container>
+            <Container-fluid>
             <Row>
             <Col md="3">
               <div className="section section-names" id="basic-elements">
-                Potential GA's<br/>
+                <h4 className="text-white">Potential GA's</h4>
                 <Card>
                   <CardBody>
 
@@ -380,11 +381,11 @@ class Home extends React.Component {
             </Col>
             <Col>
             <div className="section section-courses" id="basic-elements">
-              COURSES
+              <h4 className="text-white">COURSES</h4>
               <Card>
                 <CardBody>
                   <Row>
-                    <Col><label>Class Name </label></Col>
+                    <Col><label><h3 className="text-white">Class Name</h3> </label></Col>
                     <Col><label>Number of Hours used  / needed</label></Col>
                     <Col>Selected TA 1<br/>Hours Used</Col>
                     <Col>Selected TA 3<br/>Hours Used</Col>
@@ -398,7 +399,7 @@ class Home extends React.Component {
             </div>
             </Col>
             </Row>
-            </Container>
+            </Container-fluid>
 
           </div>
 

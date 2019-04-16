@@ -38,7 +38,7 @@ class Index extends Component {
         courseName: "Comp-1900",
         crn: 5432,
         TAHOURSNeeded: 25,
-        TAHOURSUsed: 0,
+        TAHOURSUsed: [0,0,0],
         TA_Attendance: true,
         CourseTA: ["TA's", "TA's", "TA's"],
         TaUofMID: ["TaID", "TaID", "TaID"],
@@ -50,7 +50,7 @@ class Index extends Component {
         courseName: "Comp-2700",
         crn: 5442,
         TAHOURSNeeded: 15,
-        TAHOURSUsed: 0,
+        TAHOURSUsed: [0,0,0],
         TA_Attendance: true,
         CourseTA: ["TA's", "TA's", "TA's"],
         TaUofMID: ["TaID", "TaID", "TaID"],
@@ -62,7 +62,7 @@ class Index extends Component {
         courseName: "Comp-2900",
         crn: 5242,
         TAHOURSNeeded: 15,
-        TAHOURSUsed: 0,
+        TAHOURSUsed: [0,0,0],
         TA_Attendance: true,
         CourseTA: ["TA's", "TA's", "TA's"],
         TaUofMID: ["TaID", "TaID", "TaID"],
@@ -74,7 +74,7 @@ class Index extends Component {
         courseName: "Comp-3100",
         crn: 23442,
         TAHOURSNeeded: 15,
-        TAHOURSUsed: 0,
+        TAHOURSUsed: [0,0,0],
         TA_Attendance: true,
         CourseTA: ["TA's", "TA's", "TA's"],
         TaUofMID: ["TaID", "TaID", "TaID"],
@@ -86,7 +86,7 @@ class Index extends Component {
         courseName: "Comp-3300",
         crn: 8442,
         TAHOURSNeeded: 15,
-        TAHOURSUsed: 0,
+        TAHOURSUsed: [0,0,0],
         TA_Attendance: true,
         CourseTA: ["TA's", "TA's", "TA's"],
         TaUofMID: ["TaID", "TaID", "TaID"],
@@ -220,6 +220,7 @@ class Index extends Component {
 
         coursesObject[index].CourseTA[taIndex] = courseTa;
         coursesObject[index].TaUofMID[taIndex] = uofmID;
+        coursesObject[index].TAHOURSUsed[taIndex] = hours;
 
       }
       index++;
@@ -317,13 +318,12 @@ class Index extends Component {
   }
 
 
-  updatingHoursUsed(inputID, hours, uofmID, prevUofmID) {
+  updatingHoursUsed(inputID, hours, uofmID, indexForTaHour, crn) {
     console.log("Hey I have made it to the updating Hours function");
     console.log(inputID);
     console.log(hours);
     console.log(uofmID);
-
-    console.log(prevUofmID); // This will be used to switch Students
+    console.log(crn);
     let tasObject = this.state.tas;
 
     console.log(tasObject);
@@ -331,6 +331,9 @@ class Index extends Component {
 
     let index = 0;
     //This will be used for updating the state of the TA
+
+    //This will be used for updating the state of the courses;
+    let coursesObject = this.state.courses;
 
     this.state.tas.forEach((ta) => {
       //IF the first index is empty put it in there else go down the array and find an open spot.
@@ -353,6 +356,7 @@ class Index extends Component {
             }
       }
 
+
       // if (ta.UofMID === prevUofmID) {
       //       if (tasObject[index].inputID[0] === inputID) {
       //         tasObject[index].HoursUsed[0] = '';
@@ -370,16 +374,23 @@ class Index extends Component {
       // }
       ++index;
     });
+    //Adding the TAHOURSUsed from the course
+    let index2 = 0;
+    this.state.courses.forEach((course) => {
+      if (course.crn === crn ) {
+        coursesObject[index2].TAHOURSUsed[indexForTaHour] = hours;
+      }
+    ++index2;
 
-    this.setState({
-      tas: tasObject
     });
 
 
+    this.setState({
+      tas: tasObject,
+      courses: coursesObject
+    });
 
-
-
-  }
+}
 
   render() {
     console.log(this.state);

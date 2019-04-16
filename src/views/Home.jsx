@@ -133,10 +133,17 @@ class Home extends React.Component {
       dropDownMenu.setAttribute("class", "dropdown-menu");
       dropDownWrap.setAttribute("class", "dropdown");
     }
+    console.log(inputID);
+    console.log(this.state[inputID]);
+    console.log("I am in the handleSelectClick");
 
   //if (this.state[inputID] === undefined )
   //{
+  if (this.state[inputID] === undefined) {
+    this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, 0);
+  } else {
     this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, this.state[inputID]);
+  }
   //}
   //else {
     //this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, this.state[inputID]);
@@ -195,9 +202,9 @@ class Home extends React.Component {
     //let name = event.target.name;
     //Checking if the input value is an integer or not.
     console.log("Hours");
-    console.log(event.target.value);
+    console.log(isNaN(event.target.value));
 
-    if (isNaN(event.target.value)) {
+    if (isNaN(event.target.value) || event.target.value === "" ) {
       this.setState({
         [event.target.id]: '0'
       });
@@ -215,17 +222,18 @@ class Home extends React.Component {
 
 
   //This event makes the hours goes to the Ta's hoursUsed.
-  handleOnBlurInput(uofmID, event) {
+  handleOnBlurInput(uofmID, indexForTaHour, crn, event) {
     console.log(event.target.value);
     console.log(event.target.id);
     console.log(uofmID);
+    console.log(crn);
     console.log("I am in the updating Blur Function");
     if(isNaN(event.target.value) || event.target.value === "") {
       console.log("I am in the not a number statement");
-    this.props.updatingHoursUsed(event.target.id, '0', uofmID);
+    this.props.updatingHoursUsed(event.target.id, '0', uofmID, indexForTaHour, crn);
     }
     else {
-      this.props.updatingHoursUsed(event.target.id, event.target.value, uofmID);
+      this.props.updatingHoursUsed(event.target.id, event.target.value, uofmID, indexForTaHour, crn);
     }
 
 
@@ -277,13 +285,13 @@ class Home extends React.Component {
       );
     }
 
-    const makeInput = (id, taID) => {
+    const makeInput = (id, taID, indexForTaHour, crn) => {
       return (
         <Input
           id={id}
           placeholder="TA's Hours"
           onChange={this.handleInputChange.bind(this, taID)}
-          onBlur={this.handleOnBlurInput.bind(this, taID)}
+          onBlur={this.handleOnBlurInput.bind(this, taID, indexForTaHour, crn)}
           >
           </Input>
       );
@@ -300,10 +308,10 @@ class Home extends React.Component {
       return(
       <Row>
         <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
-        <Col><label>{row.TAHOURSUsed} / {row.TAHOURSNeeded}</label></Col>
-        <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0])}</Row></Col>
-        <Col>{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1])}</Col>
-        <Col>{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2])}</Col>
+        <Col><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
+        <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
+        <Col>{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
+        <Col>{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
       </Row>
     );
 

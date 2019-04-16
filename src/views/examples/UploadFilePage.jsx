@@ -196,7 +196,7 @@ class UploadFilePage extends React.Component {
           course.courseName = course['Subject_Area'] + course['Course_Number'];
           course.crn = course['CRN'];
           course.TAHOURSNeeded = course.TAHOURSNeeded;
-          course.TAHOURSUsed = 0;
+          course.TAHOURSUsed = [0,0,0];
           course.CourseTA = ["TA's", "TA's", "TA's"];
           course.TaUofMID = ["TaID", "TaID", "TaID"];
       }

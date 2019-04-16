@@ -214,12 +214,7 @@ class Home extends React.Component {
             console.log("Am I ever getting called");
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-success");
-<<<<<<< HEAD
-            gradAssistant.class = 'text-success';
-            console.log("ADDING NOTES TO TA: " + ta['notes']);
-=======
             //gradAssistant.class = 'text-success';
->>>>>>> 12a3b8e870e1dc0041d6da45135a680185300fd3
             gradAssistant.title = ta['notes'];
           }
           else {
@@ -369,11 +364,7 @@ class Home extends React.Component {
           if(ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) > 0) {
             return (
             <Row>
-<<<<<<< HEAD
               <Col><Label className="text-white h3" id={ta.UofMID}><h5 className="text-white">{ta.firstName + " " + ta.lastName}</h5></Label></Col>
-=======
-              <Col><Label className="text-white h3"><h5 className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
->>>>>>> 12a3b8e870e1dc0041d6da45135a680185300fd3
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-white"><h5 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>

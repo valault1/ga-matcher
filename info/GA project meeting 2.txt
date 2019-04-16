@@ -13,5 +13,8 @@ Meeting 3
 - Add enrollment number and teacher on display
 
 features to check:
-- Should teach or shouldn't teach
-- We want transcript instead of registration history
+- Should teach or shouldn't teach, based on:
+- GA evaluations
+- Schedule conflict
+- Past grades (From transcript instead of registration history)
+- 

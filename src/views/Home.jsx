@@ -152,6 +152,37 @@ class Home extends React.Component {
 
   }
 
+  //takes a ga and a course object
+  //returns if that GA is free at the time of that class
+  //edits notes to say that the GA is free or not
+    checkSchedule(ga, course) {
+      ga['notes'] += "\n";
+    
+    var c = JSON.parse(JSON.stringify(course.schedule));
+    c['Days'] = c['Days'].split('');
+    for (var i = 0; i < ga.schedule.length; i++) {
+      var g = JSON.parse(JSON.stringify(ga.schedule[i])); // copy by value, so we don't edit the original schedule
+      
+      g['Days'] = g['Days'].split('');
+      var union = [...new Set([...c['Days'], ...g['Days']])]; 
+      // ^ Takes the union of the sets of days
+      //For example, 'WF' becomes ['W', 'F'] and then see if any overlap
+      //If this union's size is now as long as the two combined, none overlapped.
+      if (union.length != c['Days'].length + g['Days'].length) {
+        if ((c['Start_Time'] <= g['Start_Time'] && g['Start_Time'] <= c['Stop_Time'])
+        ||  (c['Start_Time'] <= g['Stop_Time'] && g['Stop_Time'] <= c['Stop_Time'])) {
+          //If the ga's class's start or stop time lies between the class's start and stop time, then there is a conflict.
+          ga['notes'] += "This student has a class at that time.";
+          return false;
+        }
+
+      }        
+    }
+    //We didn't find a conflict
+    ga['notes'] += "This student is free at that time";
+    return true;
+  }
+
   checkGrade(ga, course, notes) {
     ga['notes'] = notes;
     let courseName = course['Subject_Area'] + course['Course_Number'];
@@ -164,22 +195,26 @@ class Home extends React.Component {
       ga['notes'] += "\nThis student got a grade of " + grade + " in this course.";
 
     }
-    return true;
     return (grade == 'A' || grade == 'A-' || grade == 'A+' || grade == 'IP');
   }
 
   courseClick(courseKey, event) {
     console.log(courseKey);
-
+    console.log(this.props.courses_dict);
+    //trying to turn buttons blue, but didn't work
+    //const button = document.getElementById(this.props.courses_dict[courseKey]['CRN'])
+    //button.classList.remove("btn btn-primary btn-round");
+    //button.classList.add("btn btn-secondary btn-round");
 
     this.props.tas.map((ta) => {
 
-        if (this.checkGrade(ta, this.props.courses_dict[courseKey], '')) {
+        if (this.checkGrade(ta, this.props.courses_dict[courseKey], '') || this.checkSchedule(ta, this.props.courses_dict[courseKey])) {
           const gradAssistant = document.getElementById(ta.UofMID);
           if (gradAssistant != undefined) {
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-success");
             gradAssistant.class = 'text-success';
+            console.log("ADDING NOTES TO TA: " + ta['notes']);
             gradAssistant.title = ta['notes'];
           }
           else {
@@ -308,11 +343,12 @@ class Home extends React.Component {
       id2 = id2 + 3;
       return(
       <Row>
-        <Col><button class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
-        <Col><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
-        <Col><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
-        <Col>{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
-        <Col>{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
+        <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
+        <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
+        <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
+        <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
+        <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
+        <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
       </Row>
     );
 
@@ -328,10 +364,10 @@ class Home extends React.Component {
           if(ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) > 0) {
             return (
             <Row>
-              <Col><Label className="text-white h3" id={ta.UofMID}><h4 className="text-white">{ta.firstName + " " + ta.lastName}</h4></Label></Col>
+              <Col><Label className="text-white h3" id={ta.UofMID}><h5 className="text-white">{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
-              <Col><label className="text-white"><h4 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
+              <Col><label className="text-white"><h5 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>
             </Row>
             );
           }

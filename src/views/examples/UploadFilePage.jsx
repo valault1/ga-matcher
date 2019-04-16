@@ -77,6 +77,21 @@ class UploadFilePage extends React.Component {
 
       }
 
+      //delete any empty rows
+      for (var i=0; i < wbObject['Classes'].length; i++) {
+        let c = wbObject['Classes'][i]
+        if (c['Course_Number'] == '' || c['Course_Number'] == null) {
+          wbObject['Classes'].splice(i, 1);
+        }
+      }
+
+      for (var i=0; i < wbObject['GA'].length; i++) {
+        let g = wbObject['GA'][i]
+        if (g['uuid'] == '' || g['uuid'] == null ) {
+          wbObject['GA'].splice(i, 1);
+        }
+      }
+
      
       
       return wbObject;
@@ -103,6 +118,7 @@ class UploadFilePage extends React.Component {
       
 
       */
+      console.log(wb);
       var ga_dict = {};
       for (let x in wb["GA"]) {
         ga_dict[wb["GA"][x]['uuid']] = wb["GA"][x];
@@ -147,6 +163,7 @@ class UploadFilePage extends React.Component {
           schedule['Stop_Time'] = parseInt(course['Stop_Time']);
           ga.schedule.push(schedule);
           new_wb['ga_dict'][course['uuid']] = ga;
+
         }
         
       }
@@ -199,6 +216,11 @@ class UploadFilePage extends React.Component {
           course.TAHOURSUsed = [0,0,0];
           course.CourseTA = ["TA's", "TA's", "TA's"];
           course.TaUofMID = ["TaID", "TaID", "TaID"];
+          //Skip classes if they are any of these, or if they are the same teacher as another
+          var classes_to_skip = ['Ind Studies Comp Sci', 'Dissertation', "Master's Project", "Thesis", "Internshp Com Science"]
+          if (course['Title'] in classes_to_skip) {
+            delete final_data['Classes'][key];
+          }
       }
 
       

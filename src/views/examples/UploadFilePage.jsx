@@ -84,9 +84,13 @@ class UploadFilePage extends React.Component {
         //OR if they are online classes (Section begins with R)
         //OR if they are null
         var classes_to_skip = ['Ind Studies Comp Sci', 'Dissertation', "Master's Project", "Thesis", "Internshp Com Science", 'Internship Computer Science']
-       
-        if (c['Course_Number'] == '' || c['Course_Number'] == null || c['Title'] in classes_to_skip || c['Section_Number'].startsWith('R')) {
+        if (c['Course_Number'] == '' || c['Course_Number'] == null || classes_to_skip.indexOf(c['Title']) >= 0 || c['Section_Number'].startsWith('R')) {
+          console.log("DELETING COURSE " + c['CRN'] + " " + c['Title']);
           wbObject['Classes'].splice(i, 1);
+          i -=1;
+        }
+        else {
+          console.log("KEEPING COURSE " + c['CRN'] + " " + c['Title']);
         }
       }
 

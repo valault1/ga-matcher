@@ -80,7 +80,12 @@ class UploadFilePage extends React.Component {
       //delete any empty rows
       for (var i=0; i < wbObject['Classes'].length; i++) {
         let c = wbObject['Classes'][i]
-        if (c['Course_Number'] == '' || c['Course_Number'] == null) {
+        //Skip classes if they are any of these, or if they are the same teacher as another
+        //OR if they are online classes (Section begins with R)
+        //OR if they are null
+        var classes_to_skip = ['Ind Studies Comp Sci', 'Dissertation', "Master's Project", "Thesis", "Internshp Com Science", 'Internship Computer Science']
+       
+        if (c['Course_Number'] == '' || c['Course_Number'] == null || c['Title'] in classes_to_skip || c['Section_Number'].startsWith('R')) {
           wbObject['Classes'].splice(i, 1);
         }
       }
@@ -175,7 +180,12 @@ class UploadFilePage extends React.Component {
       final_data['GA'] = []
       for(var key in final_data['ga_dict']) {
         final_data['GA'].push(final_data['ga_dict'][key]);
-        final_data['ga_dict'][key].HoursAvailable = final_data['ga_dict'][key]['Hours'];
+        if (final_data['ga_dict'][key]['F/H'] == 'F') {
+          final_data['ga_dict'][key].HoursAvailable = 20;
+        }
+        else if (final_data['ga_dict'][key]['F/H'] == 'H') {
+          final_data['ga_dict'][key].HoursAvailable = 10;
+        }
         final_data['ga_dict'][key].HoursUsed = [0,0,0];
         final_data['ga_dict'][key].inputsUsed = ['','',''];
         final_data['ga_dict'][key].UofMID = final_data['ga_dict'][key]['U#'];
@@ -216,11 +226,7 @@ class UploadFilePage extends React.Component {
           course.TAHOURSUsed = [0,0,0];
           course.CourseTA = ["TA's", "TA's", "TA's"];
           course.TaUofMID = ["TaID", "TaID", "TaID"];
-          //Skip classes if they are any of these, or if they are the same teacher as another
-          var classes_to_skip = ['Ind Studies Comp Sci', 'Dissertation', "Master's Project", "Thesis", "Internshp Com Science"]
-          if (course['Title'] in classes_to_skip) {
-            delete final_data['Classes'][key];
-          }
+          
       }
 
       

@@ -344,6 +344,7 @@ class Home extends React.Component {
       return(
       <Row>
         <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
+        <Col resizable={false} ><label>{row.Title}</label></Col>
         <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
         <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
         <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>

@@ -1,37 +1,38 @@
 import React from "react";
-import classnames from "classnames";
+import ReactPaginate from 'react-paginate';
+//import classnames from "classnames";
 
 // core components
-import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
-import PageHeader from "components/PageHeader/PageHeader.jsx";
-import Footer from "components/Footer/Footer.jsx";
+//import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
+//import PageHeader from "components/PageHeader/PageHeader.jsx";
+//import Footer from "components/Footer/Footer.jsx";
 
 // sections for this page/view
-import Basics from "views/IndexSections/old/Basics.jsx";
-import Navbars from "views/IndexSections/old/Navbars.jsx";
-import Tabs from "views/IndexSections/old/Tabs.jsx";
-import Pagination from "views/IndexSections/old/Pagination.jsx";
-import Notifications from "views/IndexSections/old/Notifications.jsx";
-import Typography from "views/IndexSections/old/Typography.jsx";
-import JavaScript from "views/IndexSections/old/JavaScript.jsx";
-import NucleoIcons from "views/IndexSections/old/NucleoIcons.jsx";
-import Signup from "views/IndexSections/old/Signup.jsx";
-import Examples from "views/IndexSections/old/Examples.jsx";
-import Download from "views/IndexSections/old/Download.jsx";
+//import Basics from "views/IndexSections/old/Basics.jsx";
+//import Navbars from "views/IndexSections/old/Navbars.jsx";
+//import Tabs from "views/IndexSections/old/Tabs.jsx";
+//import Pagination from "views/IndexSections/old/Pagination.jsx";
+//import Notifications from "views/IndexSections/old/Notifications.jsx";
+//import Typography from "views/IndexSections/old/Typography.jsx";
+//import JavaScript from "views/IndexSections/old/JavaScript.jsx";
+//import NucleoIcons from "views/IndexSections/old/NucleoIcons.jsx";
+//import Signup from "views/IndexSections/old/Signup.jsx";
+//import Examples from "views/IndexSections/old/Examples.jsx";
+//import Download from "views/IndexSections/old/Download.jsx";
 import PrimaryNavBar from "components/Navbars/PrimaryNavBar.jsx";
-import Courses from "views/IndexSections/Courses.jsx";
-import Names from "views/IndexSections/Names.jsx";
+//import Courses from "views/IndexSections/Courses.jsx";
+//import Names from "views/IndexSections/Names.jsx";
 
 // reactstrap components
 import {
-  Button,
+  //Button,
   Label,
-  FormGroup,
+  //FormGroup,
   Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
+  //InputGroupAddon,
+  //InputGroupText,
+  //InputGroup,
+  //Container,
   Row,
   Col,
   Card,
@@ -54,11 +55,13 @@ class Home extends React.Component {
         courseSheet: this.props.courseSheet,
         nameSheet: this.props.nameSheet,
         nameStyler: {color: 'white'},
-        value: ""
+        value: "",
+
 
 
       };
     }
+    
   componentDidMount() {
 
     console.log(this.props);
@@ -152,6 +155,7 @@ class Home extends React.Component {
 
   }
 
+
   //takes a ga and a course object
   //returns if that GA is free at the time of that class
   //edits notes to say that the GA is free or not
@@ -207,8 +211,8 @@ class Home extends React.Component {
     //button.classList.add("btn btn-secondary btn-round");
 
     this.props.tas.map((ta) => {
-
-        if (this.checkGrade(ta, this.props.courses_dict[courseKey], '') || this.checkSchedule(ta, this.props.courses_dict[courseKey])) {
+        let courseName = this.props.courses_dict[courseKey]['Subject_Area'] + this.props.courses_dict[courseKey]['Course_Number'];
+        if (this.checkGrade(ta, this.props.courses_dict[courseKey], '') || this.checkSchedule(ta, this.props.courses_dict[courseKey]) || ta['Should_Teach'] === courseName) {
           const gradAssistant = document.getElementById(ta.UofMID);
           if (gradAssistant != undefined) {
             console.log("Am I ever getting called");
@@ -277,7 +281,7 @@ class Home extends React.Component {
 
   render() {
 
-    console.log(this.props);
+    //console.log(this.props);
 
 
 
@@ -299,7 +303,7 @@ class Home extends React.Component {
       let dropWrapId = dropdownName + "dropDownWrap" + dropid;
       let dropMenuId = dropdownName + "dropDownMenu" + dropid;
 
-      console.log(dropid);
+      //console.log(dropid);
 
       return (
       <div class="dropdown"
@@ -428,8 +432,11 @@ class Home extends React.Component {
                     <Col>Selected TA 2<br/>Hours Used</Col>
                   </Row>
                   <Row><hr/></Row>
-                  {courseMap}
-                </CardBody>
+                  <div className="commentBox">
+                    {courseMap}
+                    
+                  </div>
+                  </CardBody>
               </Card>
 
             </div>

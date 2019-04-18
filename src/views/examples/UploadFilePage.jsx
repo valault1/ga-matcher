@@ -83,8 +83,9 @@ class UploadFilePage extends React.Component {
         //Skip classes if they are any of these, or if they are the same teacher as another
         //OR if they are online classes (Section begins with R)
         //OR if they are null
-        var classes_to_skip = ['Ind Studies Comp Sci', 'Dissertation', "Master's Project", "Thesis", "Internshp Com Science", 'Internship Computer Science']
-        if (c['Course_Number'] == '' || c['Course_Number'] == null || classes_to_skip.indexOf(c['Title']) >= 0 || c['Section_Number'].startsWith('R')) {
+        var classes_to_skip = 'COMP4911,COMP6911,COMP7901,COMP8901,COMP7980,COMP9000,COMP7996'.split(',');
+
+        if (c['Course_Number'] == '' || c['Course_Number'] == null || classes_to_skip.indexOf(c['Subject_Area'] + c['Course_Number']) >= 0 || c['Section_Number'].startsWith('R')) {
           console.log("DELETING COURSE " + c['CRN'] + " " + c['Title']);
           wbObject['Classes'].splice(i, 1);
           i -=1;
@@ -136,8 +137,6 @@ class UploadFilePage extends React.Component {
         
       }
       wb['ga_dict'] = ga_dict;
-
-
 
       console.log("NOW PROCESSING WORKBOOK");
       var new_wb = JSON.parse(JSON.stringify(wb)); // allows it to copy the values, and not the reference

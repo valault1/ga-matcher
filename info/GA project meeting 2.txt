@@ -5,17 +5,24 @@
 
 Meeting 3
 X Discard Master's Project, ind studies, Thesis, dissertation
-- Combine same time, same teacher to same class
+
 X take out R classes
 X Full TA's have 20, Half have 10
-- update colors
+
 X update number of hours used
+X Add teacher on display
 - Add enrollment number 
-- Add teacher on display
+
+- Combine same time, same teacher to same class
+- update colors
+- Exclude classes based on COMPXXXX, not title
+- Include the schedule of GA Assignments
+- Check if they're taking the class
+
 
 features to check:
 - Should teach or shouldn't teach, based on:
 - GA evaluations
-- Schedule conflict
-- Past grades (From transcript instead of registration history)
-- 
+X Schedule conflict
+X Past grades (From transcript instead of registration history)
+

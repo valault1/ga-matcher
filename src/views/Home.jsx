@@ -391,7 +391,7 @@ class Home extends React.Component {
           if(ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) > 0) {
             return (
             <Row>
-              <Col><Label className="text-white h3" id={ta.UofMID}><h5 className="text-white">{ta.firstName + " " + ta.lastName}</h5></Label></Col>
+              <Col><Label className="text-white h3"><h5 className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-white"><h5 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>

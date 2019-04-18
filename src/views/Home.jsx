@@ -157,14 +157,14 @@ class Home extends React.Component {
   //edits notes to say that the GA is free or not
     checkSchedule(ga, course) {
       ga['notes'] += "\n";
-    
+
     var c = JSON.parse(JSON.stringify(course.schedule));
     c['Days'] = c['Days'].split('');
     for (var i = 0; i < ga.schedule.length; i++) {
       var g = JSON.parse(JSON.stringify(ga.schedule[i])); // copy by value, so we don't edit the original schedule
-      
+
       g['Days'] = g['Days'].split('');
-      var union = [...new Set([...c['Days'], ...g['Days']])]; 
+      var union = [...new Set([...c['Days'], ...g['Days']])];
       // ^ Takes the union of the sets of days
       //For example, 'WF' becomes ['W', 'F'] and then see if any overlap
       //If this union's size is now as long as the two combined, none overlapped.
@@ -176,7 +176,7 @@ class Home extends React.Component {
           return false;
         }
 
-      }        
+      }
     }
     //We didn't find a conflict
     ga['notes'] += "This student is free at that time";
@@ -198,13 +198,39 @@ class Home extends React.Component {
     return (grade == 'A' || grade == 'A-' || grade == 'A+' || grade == 'IP');
   }
 
-  courseClick(courseKey, event) {
+  courseClick(courseKey, rowId, event) {
     console.log(courseKey);
     console.log(this.props.courses_dict);
+    console.log(rowId);
+
+    const rowElements = document.querySelectorAll('div.row');
+    console.log(rowElements);
+
+    for (let i = 0; i < rowElements.length; i++) {
+      let row = rowElements[i];
+      console.log(row.attributes);
+      // console.log(row.attributes[2].style);
+      console.log(row.id);
+      console.log(row.getAttribute("style"));
+
+      if (row.getAttribute("style") !== "") {
+        console.log("Am I getting here");
+        console.log(row.id);
+        console.log(row);
+        //const element = document.getElementById(row.id);
+        row.removeAttribute("style");
+      }
+      if (row.id === rowId) {
+        row.setAttribute("style", "background-color: #d050dc70;");
+      }
+    }
+
     //trying to turn buttons blue, but didn't work
     //const button = document.getElementById(this.props.courses_dict[courseKey]['CRN'])
     //button.classList.remove("btn btn-primary btn-round");
     //button.classList.add("btn btn-secondary btn-round");
+
+
 
     this.props.tas.map((ta) => {
 
@@ -342,8 +368,8 @@ class Home extends React.Component {
       id1 = id1 + 3;
       id2 = id2 + 3;
       return(
-      <Row>
-        <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn)}>{row.courseName}</button></Col>
+      <Row id={"row"+id}>
+        <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn, "row"+id)}>{row.courseName}</button></Col>
         <Col resizable={false} ><label>{row.Title}</label></Col>
         <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
         <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>

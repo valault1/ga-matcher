@@ -33,6 +33,7 @@ import {
   //InputGroupText,
   //InputGroup,
   //Container,
+  Table,
   Row,
   Col,
   Card,
@@ -143,6 +144,7 @@ class Home extends React.Component {
   //if (this.state[inputID] === undefined )
   //{
   if (this.state[inputID] === undefined) {
+    
     this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, 0);
   } else {
     this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, this.state[inputID]);
@@ -187,8 +189,7 @@ class Home extends React.Component {
     return true;
   }
 
-  checkGrade(ga, course, notes) {
-    ga['notes'] = notes;
+  checkGrade(ga, course) {
     let courseName = course['Subject_Area'] + course['Course_Number'];
     let grade = ga.grades[courseName];
     if (grade == undefined) {
@@ -201,6 +202,23 @@ class Home extends React.Component {
     }
     return (grade == 'A' || grade == 'A-' || grade == 'A+' || grade == 'IP');
   }
+  checkShouldTeach(ta, course) {
+    let courseName = course['Subject_Area'] + course['Course_Number'];
+    ta['notes'] +='\n';
+    if (ta['Should_Teach'] === courseName) {
+      ta['notes'] = ta['notes'] + 'THIS STUDENT WAS RECOMMENDED TO TEACH ' + courseName + '!';
+      return 1;
+    }
+    else if (ta['Should_Not_Teach'] === courseName) {
+      ta['notes'] = ta['notes'] + 'THIS STUDENT SHOULD NOT TEACH CLASS ' + courseName + '!';
+      return -1;
+    }
+    else {
+      return 0;
+
+    }
+
+  }
 
   courseClick(courseKey, rowId, event) {
     console.log(courseKey);
@@ -212,15 +230,15 @@ class Home extends React.Component {
 
     for (let i = 0; i < rowElements.length; i++) {
       let row = rowElements[i];
-      console.log(row.attributes);
+      //console.log(row.attributes);
       // console.log(row.attributes[2].style);
-      console.log(row.id);
-      console.log(row.getAttribute("style"));
+      //console.log(row.id);
+      //console.log(row.getAttribute("style"));
 
       if (row.getAttribute("style") !== "") {
-        console.log("Am I getting here");
-        console.log(row.id);
-        console.log(row);
+        //console.log("Am I getting here");
+        //console.log(row.id);
+        //console.log(row);
         //const element = document.getElementById(row.id);
         row.removeAttribute("style");
       }
@@ -228,28 +246,41 @@ class Home extends React.Component {
         row.setAttribute("style", "background-color: #d050dc70;");
       }
     }
+    this.props.tas.map((ta) => {
+      const gradAssistant = document.getElementById(ta.UofMID);
+      gradAssistant.classList.remove("text-white");
+      gradAssistant.classList.remove("text-success");
+      gradAssistant.classList.remove("text-danger");
+      gradAssistant.classList.add("text-white");
 
-    //trying to turn buttons blue, but didn't work
-    //const button = document.getElementById(this.props.courses_dict[courseKey]['CRN'])
-    //button.classList.remove("btn btn-primary btn-round");
-    //button.classList.add("btn btn-secondary btn-round");
-
-
+    });
 
     this.props.tas.map((ta) => {
-        let courseName = this.props.courses_dict[courseKey]['Subject_Area'] + this.props.courses_dict[courseKey]['Course_Number'];
-        if (this.checkGrade(ta, this.props.courses_dict[courseKey], '') || this.checkSchedule(ta, this.props.courses_dict[courseKey]) || ta['Should_Teach'] === courseName) {
-          const gradAssistant = document.getElementById(ta.UofMID);
+        ta['notes'] = '';
+        let should_teach = this.checkShouldTeach(ta, this.props.courses_dict[courseKey]);
+        let no_schedule_conflict = this.checkSchedule(ta, this.props.courses_dict[courseKey]);
+        let good_grade = this.checkGrade(ta, this.props.courses_dict[courseKey]);
+        const gradAssistant = document.getElementById(ta.UofMID);
+        gradAssistant.title = ta['notes'];
+        if (good_grade || should_teach === 1) {
+          
           if (gradAssistant != undefined) {
-            console.log("Am I ever getting called");
+            //console.log("Am I ever getting called");
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-success");
             //gradAssistant.class = 'text-success';
-            gradAssistant.title = ta['notes'];
+            
           }
           else {
             console.log("TA NOT FOUND: ");
             console.log(ta);
+          }
+        }
+        if (should_teach === -1 || !no_schedule_conflict) {
+          if (gradAssistant != undefined) {
+            gradAssistant.classList.remove("text-white");
+            gradAssistant.classList.add("text-danger");
+
           }
         }
 
@@ -372,15 +403,20 @@ class Home extends React.Component {
       id1 = id1 + 3;
       id2 = id2 + 3;
       return(
-      <Row id={"row"+id}>
-        <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn, "row"+id)}>{row.courseName}</button></Col>
-        <Col resizable={false} ><label>{row.Title}</label></Col>
-        <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
-        <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
-        <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
-        <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
-        <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
-      </Row>
+      <Table>
+          <Row id={"row"+id}>
+            <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn, "row"+id)}>{row.courseName}</button></Col>
+            <Col resizable={false} ><label>{row.Title}</label></Col>
+            <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
+            <Col resizable={false} ><label>{row.Actual_Enrollment}</label></Col>
+            <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
+          </Row>
+          <Row>
+            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
+            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
+            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
+          </Row>
+      </Table>
     );
 
 
@@ -398,7 +434,7 @@ class Home extends React.Component {
               <Col><Label className="text-white h3"><h5 className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
-              <Col><label className="text-white"><h5 className="text-white">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>
+              <Col><label className="text-white"><h5 className={ta.HoursAvailableColor}>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>
             </Row>
             );
           }
@@ -408,7 +444,7 @@ class Home extends React.Component {
               <Col><Label className="text-white h3"><h5 className="text-success" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
-              <Col><label className="text-success"><h4 className="text-success">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
+              <Col><label className="text-success"><h4 className='text-success'>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
             </Row>
             );
           }
@@ -418,7 +454,7 @@ class Home extends React.Component {
               <Col><Label className="text-white h3" ><h5 className="text-danger" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
-              <Col><label className="text-danger"><h4 className="text-danger">{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
+              <Col><label className="text-danger"><h4 className='text-danger'>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
             </Row>
             );
           }

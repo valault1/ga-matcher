@@ -22,7 +22,7 @@ X Add teacher on display
 
 features to check:
 - Should teach or shouldn't teach, based on:
-- GA evaluations
+X GA evaluations
 X Schedule conflict
 X Past grades (From transcript instead of registration history)
 

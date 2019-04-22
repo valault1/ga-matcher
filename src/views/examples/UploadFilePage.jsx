@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 
 
+
 import classnames from "classnames";
 
 // reactstrap components
@@ -72,14 +73,31 @@ class UploadFilePage extends React.Component {
         var parsed = Papa.parse(csv, {
           header: true
          })
+         console.log(parsed);
          
         wbObject[wb.SheetNames[i]] =parsed.data;
 
       }
+      console.log("ORIGINAL DATA FROM SHEET:");
+      console.log(wbObject);
+      //make enrollment an int, so we can add overlapping classes together
+      for (var i=0; i < wbObject['Classes'].length; i++) {
+        let c = wbObject['Classes'][i];
+        c['Actual_Enrollment'] = parseInt(c['Actual_Enrollment']);
+      }
 
       //delete any empty rows
+      for (var i=0; i < wbObject['GA'].length; i++) {
+        let g = wbObject['GA'][i]
+        if (g['uuid'] == '' || g['uuid'] == null ) {
+          wbObject['GA'].splice(i, 1);
+        }
+      }
+
+
       for (var i=0; i < wbObject['Classes'].length; i++) {
-        let c = wbObject['Classes'][i]
+        
+        let c = wbObject['Classes'][i];
         //Skip classes if they are any of these, or if they are the same teacher as another
         //OR if they are online classes (Section begins with R)
         //OR if they are null
@@ -95,12 +113,40 @@ class UploadFilePage extends React.Component {
         }
       }
 
-      for (var i=0; i < wbObject['GA'].length; i++) {
-        let g = wbObject['GA'][i]
-        if (g['uuid'] == '' || g['uuid'] == null ) {
-          wbObject['GA'].splice(i, 1);
+      //Combine classes that are G and U versions of same class
+      //Look for classes that start with 4 or 7, and then see if there is another class with same teacher, days, time, and last 3 digits
+      for (var i=0; i < wbObject['Classes'].length; i++) {
+        var c = wbObject['Classes'][i];
+        if (c['Course_Number'].startsWith('4') || c['Course_Number'].startsWith('7')) {
+          console.log("CHECKING CLASS " + c['CRN'] + " " + c['Subject_Area'] + c['Course_Number']);
+          for (var j=0; j < wbObject['Classes'].length; j++) {
+            let c2 = wbObject['Classes'][j];
+            let cFirstNumber = c['Course_Number'].slice(0,1);
+            let c2FirstNumber = c2['Course_Number'].slice(0,1);
+            if (c['Instructor_UUID'] === c2['Instructor_UUID'] && c['Days'] === c2['Days'] 
+                && c['Start_Time'] === c2['Start_Time'] && c['Stop_Time'] === c2['Stop_Time'] 
+                && c['Course_Number'].slice(1) === c2['Course_Number'].slice(1)
+                && ((cFirstNumber === '4' && c2FirstNumber === '6' )|| (cFirstNumber === '7' && c2FirstNumber === '8'))
+                && j !== i) {
+                  // Combine the classes
+                  c['Actual_Enrollment'] = c['Actual_Enrollment'] + c2['Actual_Enrollment'];
+                  c['Course_Number'] = c['Course_Number'] + '/' + c2['Course_Number'];
+                  wbObject['Classes'].splice(j, 1);
+                  if (j < i) {
+                    i -= 1;
+                  }
+                  
+                  break;
+                  
+            }
+          }
+
         }
+
       }
+      
+
+      
 
      
       
@@ -134,6 +180,7 @@ class UploadFilePage extends React.Component {
         ga_dict[wb["GA"][x]['uuid']] = wb["GA"][x];
         ga_dict[wb["GA"][x]['uuid']]['grades'] = {};
         ga_dict[wb["GA"][x]['uuid']]['schedule'] = [];
+        ga_dict[wb["GA"][x]['uuid']]['color'] = 'text-white';
         
       }
       wb['ga_dict'] = ga_dict;
@@ -189,6 +236,8 @@ class UploadFilePage extends React.Component {
         else if (final_data['ga_dict'][key]['F/H'] == 'H') {
           final_data['ga_dict'][key].HoursAvailable = 10;
         }
+        //initialize all colors of the hours to white
+        final_data['ga_dict'][key].HoursAvailableColor = 'text-success';
         final_data['ga_dict'][key].HoursUsed = [0,0,0];
         final_data['ga_dict'][key].inputsUsed = ['','',''];
         final_data['ga_dict'][key].UofMID = final_data['ga_dict'][key]['U#'];
@@ -225,7 +274,7 @@ class UploadFilePage extends React.Component {
         */
           course.courseName = course['Subject_Area'] + course['Course_Number'];
           course.crn = course['CRN'];
-          course.TAHOURSNeeded = course.TAHOURSNeeded;
+          course.TAHOURSNeeded = (course['Actual_Enrollment'] / 2) - ((course['Actual_Enrollment'] / 2) % 5);
           course.TAHOURSUsed = [0,0,0];
           course.CourseTA = ["TA's", "TA's", "TA's"];
           course.TaUofMID = ["TaID", "TaID", "TaID"];
@@ -263,7 +312,7 @@ class UploadFilePage extends React.Component {
       let courseName = course['Subject_Area'] + course['Course_Number'];
       let grade = ga.grades[courseName];
       if (grade == undefined) {
-        ga['notes'] += "\nThis student hasn't taken the course at University of Memphis.";
+        ga['notes'] += "\nThis student hasn't taken this course.";
         
       }
       else {

@@ -34,6 +34,7 @@
   "dependencies": {
     "chart.js": "2.7.3",
     "classnames": "2.2.6",
+    "file-saver": "^2.0.1",
     "jw-react-pagination": "^1.0.7",
     "moment": "2.24.0",
     "node-sass": "4.11.0",
@@ -43,6 +44,7 @@
     "react": "16.8.3",
     "react-bootstrap-switch": "15.5.3",
     "react-chartjs-2": "2.7.4",
+    "react-csv": "^1.1.1",
     "react-datetime": "2.16.3",
     "react-dom": "16.8.3",
     "react-paginate": "^6.3.0",

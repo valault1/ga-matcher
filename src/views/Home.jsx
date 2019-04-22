@@ -1,5 +1,6 @@
 import React from "react";
 import ReactPaginate from 'react-paginate';
+import CSVLink from 'react-csv';
 //import classnames from "classnames";
 
 // core components
@@ -51,6 +52,7 @@ class Home extends React.Component {
       this.handleclick = this.handleclick.bind(this);
       this.handleDropdownClick = this.handleDropdownClick.bind(this);
       this.handleSelectClick = this.handleSelectClick.bind(this);
+      this.downloadFile = this.downloadFile.bind(this);
       //Pass the props stuff to state, so it can be changed here instead of in the index
       this.state={
         courseSheet: this.props.courseSheet,
@@ -61,6 +63,21 @@ class Home extends React.Component {
 
 
       };
+      
+
+    }
+    downloadFile() {
+      
+      var csvData = this.getCsvData();
+
+
+
+      var FileSaver = require('file-saver');
+      var blob = new Blob([csvData], {type: "text/csv;charset=utf-8"});
+      FileSaver.saveAs(blob, "hello world.csv")
+    }
+    getCsvData() {
+      return "PLACEHOLDER"
     }
     
   componentDidMount() {
@@ -122,6 +139,7 @@ class Home extends React.Component {
 
   handleSelectClick(lastName, crn, taIndex, uofmID, prevUofmID, inputID, dropdownId, dropWrapId, dropMenuId, event) {
     console.log(lastName);
+    
 
     const dropDown = document.getElementById(dropdownId);
     const dropDownMenu = document.getElementById(dropMenuId);
@@ -337,6 +355,7 @@ class Home extends React.Component {
   }
 
   render() {
+    this.state.csvData = ['hello'];
 
     //console.log(this.props);
 
@@ -410,6 +429,8 @@ class Home extends React.Component {
             <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
             <Col resizable={false} ><label>{row.Actual_Enrollment}</label></Col>
             <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
+            <Col resizable={false} ><label>{row.Days} </label></Col>
+            <Col resizable={false} ><label>{row.Start_Time} - {row.Stop_Time} </label></Col>
           </Row>
           <Row>
             <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
@@ -465,16 +486,24 @@ class Home extends React.Component {
     return (
       <>
         <PrimaryNavBar/>
+        
         <div className="wrapper">
-
+        
           <div className="main">
+            
             <Container-fluid>
+            <Row>
+              <button onClick={this.downloadFile.bind(this, 'BUTTON')}>click to download</button>
+            </Row>
             <Row>
             <Col md="3">
               <div className="section section-names" id="basic-elements">
                 <h4 className="text-white">Potential GA's</h4>
+                
                 <Card>
+                  
                   <CardBody>
+                    
 
                     {gaMap}
                   </CardBody>

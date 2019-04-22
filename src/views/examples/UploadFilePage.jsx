@@ -31,7 +31,7 @@ import {
 
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
+import PrimaryNavBar from "components/Navbars/PrimaryNavBar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import { watchFile } from "fs";
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
@@ -180,7 +180,7 @@ class UploadFilePage extends React.Component {
         ga_dict[wb["GA"][x]['uuid']] = wb["GA"][x];
         ga_dict[wb["GA"][x]['uuid']]['grades'] = {};
         ga_dict[wb["GA"][x]['uuid']]['schedule'] = [];
-        ga_dict[wb["GA"][x]['uuid']]['color'] = 'text-white';
+        ga_dict[wb["GA"][x]['uuid']]['NameColor'] = 'text-white';
         
       }
       wb['ga_dict'] = ga_dict;
@@ -390,7 +390,7 @@ class UploadFilePage extends React.Component {
     return (
       <>
 
-      <ExamplesNavbar />
+      <PrimaryNavBar downloadFile={this.downloadFile}/>
 
       <div className="wrapper">
         <div className="page-header">

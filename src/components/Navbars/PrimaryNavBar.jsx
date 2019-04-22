@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
+
 import {
   Collapse,
   DropdownToggle,
@@ -18,6 +19,7 @@ import {
 } from "reactstrap";
 
 class Navbars extends React.Component {
+
   render() {
     return (
       <div className="section section-navbars">
@@ -47,6 +49,7 @@ class Navbars extends React.Component {
                 <NavItem>
                   <NavLink href="#pablo" onClick={e => e.preventDefault()}>
                     Download Current Setup
+                    
                   </NavLink>
                 </NavItem>
               </Nav>

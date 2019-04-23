@@ -33,7 +33,7 @@ import {
   //InputGroupAddon,
   //InputGroupText,
   //InputGroup,
-  //Container,
+  Container,
   Table,
   Row,
   Col,
@@ -63,11 +63,11 @@ class Home extends React.Component {
 
 
       };
-      
+
 
     }
     downloadFile() {
-      
+
       var csvData = this.getCsvData();
 
 
@@ -79,7 +79,7 @@ class Home extends React.Component {
     getCsvData() {
       return "PLACEHOLDER"
     }
-    
+
   componentDidMount() {
 
     console.log(this.props);
@@ -139,7 +139,7 @@ class Home extends React.Component {
 
   handleSelectClick(lastName, crn, taIndex, uofmID, prevUofmID, inputID, dropdownId, dropWrapId, dropMenuId, event) {
     console.log(lastName);
-    
+
 
     const dropDown = document.getElementById(dropdownId);
     const dropDownMenu = document.getElementById(dropMenuId);
@@ -162,7 +162,7 @@ class Home extends React.Component {
   //if (this.state[inputID] === undefined )
   //{
   if (this.state[inputID] === undefined) {
-    
+
     this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, 0);
   } else {
     this.props.addAvailableTa(lastName, crn, taIndex, uofmID, prevUofmID, inputID, this.state[inputID]);
@@ -281,23 +281,26 @@ class Home extends React.Component {
         const gradAssistant = document.getElementById(ta.UofMID);
         gradAssistant.title = ta['notes'];
         if (good_grade || should_teach === 1) {
-          
+
           if (gradAssistant != undefined) {
             //console.log("Am I ever getting called");
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-success");
             //gradAssistant.class = 'text-success';
-            
+            this.props.addTaColors("text-sucess", ta.UofMID);
+
           }
           else {
             console.log("TA NOT FOUND: ");
             console.log(ta);
+            //this.props.addTaColors("text-white", ta.UofMID);
           }
         }
         if (should_teach === -1 || !no_schedule_conflict) {
           if (gradAssistant != undefined) {
             gradAssistant.classList.remove("text-white");
             gradAssistant.classList.add("text-danger");
+            this.props.addTaColors("text-danger", ta.UofMID);
 
           }
         }
@@ -425,9 +428,9 @@ class Home extends React.Component {
       <Table>
           <Row id={"row"+id}>
             <Col resizable={false} ><button id={row.CRN} class="btn btn-primary btn-round" type="button" id={row.crn} onClick={this.courseClick.bind(this, row.crn, "row"+id)}>{row.courseName}</button></Col>
-            <Col resizable={false} ><label>{row.Title}</label></Col>
-            <Col resizable={false} ><label>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</label></Col>
-            <Col resizable={false} ><label>{row.Actual_Enrollment}</label></Col>
+            <Col resizable={false} ><label><h5>{row.Title}</h5></label></Col>
+            <Col resizable={false} ><label><h5>{row.Instructor_First_Name + " " + row.Instructor_Last_Name}</h5></label></Col>
+            <Col resizable={false} ><label><h5>{row.Actual_Enrollment}</h5></label></Col>
             <Col resizable={false} ><label>{ (parseInt(row.TAHOURSUsed[0]) + parseInt(row.TAHOURSUsed[1]) + parseInt(row.TAHOURSUsed[2])) } / {row.TAHOURSNeeded}</label></Col>
             <Col resizable={false} ><label>{row.Days} </label></Col>
             <Col resizable={false} ><label>{row.Start_Time} - {row.Stop_Time} </label></Col>
@@ -452,17 +455,17 @@ class Home extends React.Component {
           if(ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) > 0) {
             return (
             <Row>
-              <Col><Label className="text-white h3"><h5 className="text-white" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
+              <Col><Label className="text-white h3"><h5 className={ta.NameColor} id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
-              <Col><label className="text-white"><h5 className={ta.HoursAvailableColor}>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>
+              <Col><label className="text-white"><h5 className={"text-white"}>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h5></label></Col>
             </Row>
             );
           }
           else if (ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2])) === 0) {
             return (
             <Row>
-              <Col><Label className="text-white h3"><h5 className="text-success" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
+              <Col><Label className="text-white h3"><h5 className={ta.NameColor} id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-success"><h4 className='text-success'>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
@@ -472,7 +475,7 @@ class Home extends React.Component {
           else {
             return (
             <Row>
-              <Col><Label className="text-white h3" ><h5 className="text-danger" id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
+              <Col><Label className="text-white h3" ><h5 className={ta.NameColor} id={ta.UofMID}>{ta.firstName + " " + ta.lastName}</h5></Label></Col>
               {/*//This will be used to tell how many more hours the Ta has available*/}
 
               <Col><label className="text-danger"><h4 className='text-danger'>{ta.HoursAvailable - (parseInt(ta.HoursUsed[0]) + parseInt(ta.HoursUsed[1]) + parseInt(ta.HoursUsed[2]))}</h4></label></Col>
@@ -486,12 +489,12 @@ class Home extends React.Component {
     return (
       <>
         <PrimaryNavBar/>
-        
+
         <div className="wrapper">
-        
+
           <div className="main">
-            
-            <Container-fluid>
+
+            <Container fluid={true}>
             <Row>
               <button onClick={this.downloadFile.bind(this, 'BUTTON')}>click to download</button>
             </Row>
@@ -499,18 +502,16 @@ class Home extends React.Component {
             <Col md="3">
               <div className="section section-names" id="basic-elements">
                 <h4 className="text-white">Potential GA's</h4>
-                
-                <Card>
-                  
-                  <CardBody>
-                    
 
+                <Card className="position-fixed col-3" style={{"overflow-y":"scroll", "height": "700px"}}>
+
+                  <CardBody>
                     {gaMap}
                   </CardBody>
                 </Card>
               </div>
             </Col>
-            <Col>
+            <Col md="9">
             <div className="section section-courses" id="basic-elements">
               <h4 className="text-white">COURSES</h4>
               <Card>
@@ -525,7 +526,7 @@ class Home extends React.Component {
                   <Row><hr/></Row>
                   <div className="commentBox">
                     {courseMap}
-                    
+
                   </div>
                   </CardBody>
               </Card>
@@ -533,7 +534,7 @@ class Home extends React.Component {
             </div>
             </Col>
             </Row>
-            </Container-fluid>
+            </Container>
 
           </div>
 

@@ -414,7 +414,10 @@ class Home extends React.Component {
     let id2 = 2
     const courseMap = this.props.courses.map((row) => {
 
-      id = row.CRN;
+      let Inputid = row.CRN;
+      id += 3;
+      id1 += 3;
+      id2 += 3;
 
       return(
       <Table>
@@ -428,9 +431,9 @@ class Home extends React.Component {
             <Col resizable={false} ><label>{row.Start_Time} - {row.Stop_Time} </label></Col>
           </Row>
           <Row>
-            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input1 " + id)}{makeInput("input1 " + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
-            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input2 " + (id))}{makeInput("input2 " + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
-            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input3 " + (id))}{makeInput("input3 " + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
+            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input1 " + Inputid)}{makeInput("input1 " + Inputid, row.TaUofMID[0], 0, row.crn)}</Row></Col>
+            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input2 " + (Inputid))}{makeInput("input2 " + (Inputid), row.TaUofMID[1], 1, row.crn)}</Col>
+            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input3 " + (Inputid))}{makeInput("input3 " + (Inputid), row.TaUofMID[2], 2, row.crn)}</Col>
           </Row>
       </Table>
     );
@@ -486,9 +489,6 @@ class Home extends React.Component {
 
           <div className="main">
             <Container fluid={true}>
-            <Row>
-              <button onClick={this.downloadFile.bind(this, 'BUTTON')}>click to download</button>
-            </Row>
 
             <Row>
             <Col md="3">

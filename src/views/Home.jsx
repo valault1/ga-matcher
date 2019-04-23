@@ -33,7 +33,7 @@ import {
   //InputGroupAddon,
   //InputGroupText,
   //InputGroup,
-  //Container,
+  Container,
   Table,
   Row,
   Col,
@@ -52,7 +52,6 @@ class Home extends React.Component {
       this.handleclick = this.handleclick.bind(this);
       this.handleDropdownClick = this.handleDropdownClick.bind(this);
       this.handleSelectClick = this.handleSelectClick.bind(this);
-      this.downloadFile = this.downloadFile.bind(this);
       //Pass the props stuff to state, so it can be changed here instead of in the index
       this.state={
         courseSheet: this.props.courseSheet,
@@ -65,58 +64,6 @@ class Home extends React.Component {
       };
       
 
-    }
-    downloadFile() {
-      try {
-        var csvData = this.getCsvData();
-      }
-      catch {
-        console.log("ERROR");
-      }
-
-
-
-      var FileSaver = require('file-saver');
-      var blob = new Blob([csvData], {type: "text/csv;charset=utf-8"});
-      FileSaver.saveAs(blob, "hello world.csv")
-    }
-    getCsvData() {
-      let csvData="";
-      csvData += "First Name, Last Name, U#, Hours Assigned, Course 1 CRN,Course 1 Hours Assigned, Course 1 Name, Course 1 Teacher, Course 1 Days, Course 1 Start,";
-      csvData += "Course 2 CRN,Course 2 Hours Assigned, Course 2 Name, Course 2 Teacher, Course 2 Days, Course 2 Hours\n"
-
-      for (let i=0; i < this.props.tas.length; i++) {
-        let ta = this.props.tas[i];
-        let classes = [];
-        for (let j=0; j < ta.inputsUsed.length; j++) {
-          if (ta.inputsUsed[j] !== '') {
-            classes.push(this.props.courses_dict[ta.inputsUsed[j].slice(7)]);
-          }
-        }
-        
-        csvData +=ta.First + ",";
-        csvData +=ta.Last + ",";
-        csvData +=ta["U#"]+ ",";
-        csvData +=ta.HoursAvailable + ",";
-
-        for (let j=0; j < classes.length; j++) {
-          csvData += classes[j].CRN + ",";
-          csvData += ta.HoursUsed[j] + ",";
-
-          csvData += classes[j]['Subject_Area'] + classes[j]['Course_Number'] + ",";
-          csvData += classes[j].Instructor_Last_Name + ",";
-          csvData += classes[j].Days + ",";
-          csvData += classes[j].Start_Time + " - " + classes[j].Stop_Time + ",";
-        }
-
-        csvData +="\n";
-        
-      }
-
-      
-
-
-      return csvData;
     }
     
   componentDidMount() {
@@ -304,15 +251,20 @@ class Home extends React.Component {
       }
     }
     this.props.tas.map((ta) => {
-      const gradAssistant = document.getElementById(ta.UofMID);
-      gradAssistant.classList.remove("text-white");
-      gradAssistant.classList.remove("text-success");
-      gradAssistant.classList.remove("text-danger");
-      gradAssistant.classList.add("text-white");
+      console.log(ta);
+      if (ta.UofMID != "000000000") {
+        const gradAssistant = document.getElementById(ta.UofMID);
+
+        gradAssistant.classList.remove("text-white");
+        gradAssistant.classList.remove("text-success");
+        gradAssistant.classList.remove("text-danger");
+        gradAssistant.classList.add("text-white");
+      }
 
     });
 
     this.props.tas.map((ta) => {
+      if (ta.UofMID != "000000000") {
         ta['notes'] = '';
         let should_teach = this.checkShouldTeach(ta, this.props.courses_dict[courseKey]);
         let no_schedule_conflict = this.checkSchedule(ta, this.props.courses_dict[courseKey]);
@@ -340,8 +292,9 @@ class Home extends React.Component {
 
           }
         }
+      }
 
-        return null;
+      return null;
     });
     console.log("this.props.tas_dict = ");
     console.log(this.props.tas_dict);
@@ -529,7 +482,7 @@ class Home extends React.Component {
         
           <div className="main">
             
-            <Container-fluid>
+            <Container fluid={true}>
             
             <Row>
             <Col md="3">
@@ -569,7 +522,7 @@ class Home extends React.Component {
             </div>
             </Col>
             </Row>
-            </Container-fluid>
+            </Container>
 
           </div>
 

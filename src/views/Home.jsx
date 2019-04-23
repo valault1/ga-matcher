@@ -67,8 +67,12 @@ class Home extends React.Component {
 
     }
     downloadFile() {
-      
-      var csvData = this.getCsvData();
+      try {
+        var csvData = this.getCsvData();
+      }
+      catch {
+        console.log("ERROR");
+      }
 
 
 
@@ -77,7 +81,42 @@ class Home extends React.Component {
       FileSaver.saveAs(blob, "hello world.csv")
     }
     getCsvData() {
-      return "PLACEHOLDER"
+      let csvData="";
+      csvData += "First Name, Last Name, U#, Hours Assigned, Course 1 CRN,Course 1 Hours Assigned, Course 1 Name, Course 1 Teacher, Course 1 Days, Course 1 Start,";
+      csvData += "Course 2 CRN,Course 2 Hours Assigned, Course 2 Name, Course 2 Teacher, Course 2 Days, Course 2 Hours\n"
+
+      for (let i=0; i < this.props.tas.length; i++) {
+        let ta = this.props.tas[i];
+        let classes = [];
+        for (let j=0; j < ta.inputsUsed.length; j++) {
+          if (ta.inputsUsed[j] !== '') {
+            classes.push(this.props.courses_dict[ta.inputsUsed[j].slice(7)]);
+          }
+        }
+        
+        csvData +=ta.First + ",";
+        csvData +=ta.Last + ",";
+        csvData +=ta["U#"]+ ",";
+        csvData +=ta.HoursAvailable + ",";
+
+        for (let j=0; j < classes.length; j++) {
+          csvData += classes[j].CRN + ",";
+          csvData += ta.HoursUsed[j] + ",";
+
+          csvData += classes[j]['Subject_Area'] + classes[j]['Course_Number'] + ",";
+          csvData += classes[j].Instructor_Last_Name + ",";
+          csvData += classes[j].Days + ",";
+          csvData += classes[j].Start_Time + " - " + classes[j].Stop_Time + ",";
+        }
+
+        csvData +="\n";
+        
+      }
+
+      
+
+
+      return csvData;
     }
     
   componentDidMount() {
@@ -418,9 +457,8 @@ class Home extends React.Component {
     let id2 = 2
     const courseMap = this.props.courses.map((row) => {
 
-      id = id + 3;
-      id1 = id1 + 3;
-      id2 = id2 + 3;
+      id = row.CRN;
+
       return(
       <Table>
           <Row id={"row"+id}>
@@ -433,9 +471,9 @@ class Home extends React.Component {
             <Col resizable={false} ><label>{row.Start_Time} - {row.Stop_Time} </label></Col>
           </Row>
           <Row>
-            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
-            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
-            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
+            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input1 " + id)}{makeInput("input1 " + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
+            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input2 " + (id))}{makeInput("input2 " + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
+            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input3 " + (id))}{makeInput("input3 " + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
           </Row>
       </Table>
     );
@@ -485,16 +523,14 @@ class Home extends React.Component {
     );
     return (
       <>
-        <PrimaryNavBar/>
+        <PrimaryNavBar tas={this.props.tas} courses_dict={this.props.courses_dict}/>
         
         <div className="wrapper">
         
           <div className="main">
             
             <Container-fluid>
-            <Row>
-              <button onClick={this.downloadFile.bind(this, 'BUTTON')}>click to download</button>
-            </Row>
+            
             <Row>
             <Col md="3">
               <div className="section section-names" id="basic-elements">

@@ -52,7 +52,6 @@ class Home extends React.Component {
       this.handleclick = this.handleclick.bind(this);
       this.handleDropdownClick = this.handleDropdownClick.bind(this);
       this.handleSelectClick = this.handleSelectClick.bind(this);
-      this.downloadFile = this.downloadFile.bind(this);
       //Pass the props stuff to state, so it can be changed here instead of in the index
       this.state={
         courseSheet: this.props.courseSheet,
@@ -66,19 +65,7 @@ class Home extends React.Component {
 
 
     }
-    downloadFile() {
 
-      var csvData = this.getCsvData();
-
-
-
-      var FileSaver = require('file-saver');
-      var blob = new Blob([csvData], {type: "text/csv;charset=utf-8"});
-      FileSaver.saveAs(blob, "hello world.csv")
-    }
-    getCsvData() {
-      return "PLACEHOLDER"
-    }
 
   componentDidMount() {
 
@@ -265,15 +252,20 @@ class Home extends React.Component {
       }
     }
     this.props.tas.map((ta) => {
-      const gradAssistant = document.getElementById(ta.UofMID);
-      gradAssistant.classList.remove("text-white");
-      gradAssistant.classList.remove("text-success");
-      gradAssistant.classList.remove("text-danger");
-      gradAssistant.classList.add("text-white");
+      console.log(ta);
+      if (ta.UofMID != "000000000") {
+        const gradAssistant = document.getElementById(ta.UofMID);
+
+        gradAssistant.classList.remove("text-white");
+        gradAssistant.classList.remove("text-success");
+        gradAssistant.classList.remove("text-danger");
+        gradAssistant.classList.add("text-white");
+      }
 
     });
 
     this.props.tas.map((ta) => {
+      if (ta.UofMID != "000000000") {
         ta['notes'] = '';
         let should_teach = this.checkShouldTeach(ta, this.props.courses_dict[courseKey]);
         let no_schedule_conflict = this.checkSchedule(ta, this.props.courses_dict[courseKey]);
@@ -304,8 +296,9 @@ class Home extends React.Component {
 
           }
         }
+      }
 
-        return null;
+      return null;
     });
     console.log("this.props.tas_dict = ");
     console.log(this.props.tas_dict);
@@ -421,9 +414,8 @@ class Home extends React.Component {
     let id2 = 2
     const courseMap = this.props.courses.map((row) => {
 
-      id = id + 3;
-      id1 = id1 + 3;
-      id2 = id2 + 3;
+      id = row.CRN;
+
       return(
       <Table>
           <Row id={"row"+id}>
@@ -436,9 +428,9 @@ class Home extends React.Component {
             <Col resizable={false} ><label>{row.Start_Time} - {row.Stop_Time} </label></Col>
           </Row>
           <Row>
-            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input" + id)}{makeInput("input" + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
-            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input" + (id+1))}{makeInput("input" + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
-            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input" + (id+2))}{makeInput("input" + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
+            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input1 " + id)}{makeInput("input1 " + id, row.TaUofMID[0], 0, row.crn)}</Row></Col>
+            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input2 " + (id))}{makeInput("input2 " + (id+1), row.TaUofMID[1], 1, row.crn)}</Col>
+            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input3 " + (id))}{makeInput("input3 " + (id+2), row.TaUofMID[2], 2, row.crn)}</Col>
           </Row>
       </Table>
     );
@@ -488,16 +480,16 @@ class Home extends React.Component {
     );
     return (
       <>
-        <PrimaryNavBar/>
+        <PrimaryNavBar tas={this.props.tas} courses_dict={this.props.courses_dict}/>
 
         <div className="wrapper">
 
           <div className="main">
-
             <Container fluid={true}>
             <Row>
               <button onClick={this.downloadFile.bind(this, 'BUTTON')}>click to download</button>
             </Row>
+
             <Row>
             <Col md="3">
               <div className="section section-names" id="basic-elements">

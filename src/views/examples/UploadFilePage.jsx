@@ -145,7 +145,6 @@ class UploadFilePage extends React.Component {
 
       }
       
-
       
 
      
@@ -274,7 +273,7 @@ class UploadFilePage extends React.Component {
         */
           course.courseName = course['Subject_Area'] + course['Course_Number'];
           course.crn = course['CRN'];
-          course.TAHOURSNeeded = (course['Actual_Enrollment'] / 2) - ((course['Actual_Enrollment'] / 2) % 5);
+          course.TAHOURSNeeded = Math.round((course['Actual_Enrollment'] / 2)/5) * 5;
           course.TAHOURSUsed = [0,0,0];
           course.CourseTA = ["TA's", "TA's", "TA's"];
           course.TaUofMID = ["TaID", "TaID", "TaID"];
@@ -298,6 +297,32 @@ class UploadFilePage extends React.Component {
         console.log(ga['notes']);
         
       }
+
+      //This is so they can select No TA for a class
+      let NO_TA = {
+        "F/H":"F",
+        "First":"NO",
+        "firstName":"NO",
+        "Last":"TA",
+        "HoursAvailable":0,
+        "HoursAvailableColor": "text-success",
+        "HoursUsed":["0","0","0"],
+        "NameColor":"text-white",
+        "Should_Not_Teach":"",
+        "Should_Teach":"",
+        "U#":"000000000",
+        "grades":{},
+        "inputsUsed":["","",""],
+        "lastName":"TA",
+        "schedule":[],
+        "uuid":"0000000",
+        "notes":"",
+        "UofMID":"000000000"
+      };
+      final_data['GA'].push(NO_TA);
+      final_data['ga_dict'][NO_TA.uuid] = NO_TA;
+      
+    
 
       //NOTE: When you edit a ga in ga_dict, it will change in GA as well, and vice versa
       //This goes for classes as well; What we have is 
@@ -390,7 +415,7 @@ class UploadFilePage extends React.Component {
     return (
       <>
 
-      <PrimaryNavBar downloadFile={this.downloadFile}/>
+      <PrimaryNavBar />
 
       <div className="wrapper">
         <div className="page-header">

@@ -3,10 +3,6 @@ import * as XLSX from 'xlsx';
 import { Link } from "react-router-dom";
 
 
-
-
-import classnames from "classnames";
-
 // reactstrap components
 import {
   Button,
@@ -32,9 +28,7 @@ import {
 
 // core components
 import PrimaryNavBar from "components/Navbars/PrimaryNavBar.jsx";
-import Footer from "components/Footer/Footer.jsx";
-import { watchFile } from "fs";
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
+
 
 var Papa = require('papaparse');
 var sheet1, sheet2;

@@ -216,9 +216,9 @@ class Home extends React.Component {
       //console.log(row.attributes);
       // console.log(row.attributes[2].style);
       //console.log(row.id);
-      //console.log(row.getAttribute("style"));
+      console.log(row.getAttribute("style"));
 
-      if (row.getAttribute("style") !== "") {
+      if (row.getAttribute("style") !== "" && row.getAttribute("style") !== "border-bottom: 2px solid rgb(198, 82, 230); padding-bottom: 4px;") {
         //console.log("Am I getting here");
         //console.log(row.id);
         //console.log(row);
@@ -378,6 +378,8 @@ class Home extends React.Component {
     const makeInput = (id, taID, indexForTaHour, crn) => {
       return (
         <Input
+          size="input-sm"
+          className="sm-1"
           id={id}
           placeholder="TA's Hours"
           onChange={this.handleInputChange.bind(this, taID)}
@@ -408,10 +410,10 @@ class Home extends React.Component {
             <Col resizable={false} ><label>{row.Days} </label></Col>
             <Col resizable={false} ><label>{row.Start_Time} - {row.Stop_Time} </label></Col>
           </Row>
-          <Row>
-            <Col resizable={false} ><Row>{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input1 " + Inputid)}{makeInput("input1 " + Inputid, row.TaUofMID[0], 0, row.crn)}</Row></Col>
-            <Col resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input2 " + (Inputid))}{makeInput("input2 " + (Inputid), row.TaUofMID[1], 1, row.crn)}</Col>
-            <Col resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input3 " + (Inputid))}{makeInput("input3 " + (Inputid), row.TaUofMID[2], 2, row.crn)}</Col>
+          <Row style={{"border-bottom":"2px solid", "border-bottom-color":"#c652e6", "padding-bottom":"4px"}}>
+            <Col sm={{size:2.5, offset: 3 }} resizable={false} >{dropdown(id, row.CourseTA[0], row.crn, 0, row.TaUofMID[0], "input1 " + Inputid)}{makeInput("input1 " + Inputid, row.TaUofMID[0], 0, row.crn)}</Col>
+            <Col sm={{size:2.5, offset: 1}} resizable={false} >{dropdown(id1, row.CourseTA[1], row.crn, 1, row.TaUofMID[1], "input2 " + (Inputid))}{makeInput("input2 " + (Inputid), row.TaUofMID[1], 1, row.crn)}</Col>
+            <Col sm={{size:2.5, offset: 1}} resizable={false} >{dropdown(id2, row.CourseTA[2], row.crn, 2, row.TaUofMID[2], "input3 " + (Inputid))}{makeInput("input3 " + (Inputid), row.TaUofMID[2], 2, row.crn)}</Col>
           </Row>
       </Table>
     );
@@ -487,10 +489,12 @@ class Home extends React.Component {
                 <CardBody>
                   <Row>
                     <Col><label><h3 className="text-white">Class Name</h3> </label></Col>
-                    <Col><label>Number of Hours used  / needed</label></Col>
-                    <Col>Selected TA 1<br/>Hours Used</Col>
-                    <Col>Selected TA 3<br/>Hours Used</Col>
-                    <Col>Selected TA 2<br/>Hours Used</Col>
+                    <Col><label><h4>Class Name></h4></label></Col>
+                    <Col><label><h4>Instructor</h4></label></Col>
+                    <Col><label><h4>Students Enrolled</h4></label></Col>
+                    <Col><label><h4>Number of Hours used  / needed</h4></label></Col>
+                    <Col><label><h4>Days of the week</h4></label></Col>
+                    <Col><label><h4>Time (In military Time)</h4></label></Col>
                   </Row>
                   <Row><hr/></Row>
                   <div className="commentBox">
